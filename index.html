@@ -1,0 +1,1961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>M.E.T.S. 04: Ultra-Realistic CR2032 Solid-State Coin Cell</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #040711;
+      --bg-gradient: radial-gradient(circle at 50% 36%, #0f172a 0%, #070b16 60%, #020408 100%);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --card-bg: rgba(15, 23, 42, 0.88);
+      --card-border: rgba(255, 255, 255, 0.12);
+      --accent: #38bdf8;
+      --accent-glow: rgba(56, 189, 248, 0.45);
+      --badge-bg: rgba(15, 23, 42, 0.92);
+      --badge-border: rgba(255, 255, 255, 0.16);
+      --badge-text: #f8fafc;
+      --shadow-color: rgba(0, 0, 0, 0.75);
+    }
+
+    [data-theme="light"] {
+      --bg: #e2e8f0;
+      --bg-gradient: radial-gradient(circle at 50% 32%, #ffffff 0%, #e2e8f0 60%, #cbd5e1 100%);
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --card-bg: rgba(255, 255, 255, 0.92);
+      --card-border: rgba(15, 23, 42, 0.14);
+      --accent: #0284c7;
+      --accent-glow: rgba(2, 132, 199, 0.35);
+      --badge-bg: rgba(255, 255, 255, 0.95);
+      --badge-border: rgba(15, 23, 42, 0.16);
+      --badge-text: #0f172a;
+      --shadow-color: rgba(15, 23, 42, 0.14);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    body {
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+      transition: background 0.3s ease;
+    }
+
+    #webgl-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      cursor: grab;
+    }
+
+    #webgl-canvas:active {
+      cursor: grabbing;
+    }
+
+    /* SVG Overlay for Dynamic Leader Lines */
+    #svg-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 5;
+      pointer-events: none;
+    }
+
+    /* Dynamic 3D HTML Floating Labels on Left */
+    #labels-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 6;
+      pointer-events: none;
+    }
+
+    .callout-badge {
+      position: absolute;
+      pointer-events: auto;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--badge-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--badge-border);
+      padding: 8px 16px;
+      border-radius: 9999px;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--badge-text);
+      white-space: nowrap;
+      box-shadow: 0 10px 25px var(--shadow-color), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      transform: translate(-100%, -50%);
+      margin-left: -28px;
+    }
+
+    .callout-badge:hover, .callout-badge.active {
+      border-color: var(--accent);
+      transform: translate(-100%, -50%) scale(1.06);
+      box-shadow: 0 0 22px var(--accent-glow), 0 12px 30px var(--shadow-color);
+    }
+
+    .callout-indicator {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 10px var(--accent);
+      flex-shrink: 0;
+    }
+
+    .callout-title {
+      font-weight: 800;
+      letter-spacing: -0.2px;
+    }
+
+    .callout-dim {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--accent);
+      background: rgba(56, 189, 248, 0.14);
+      padding: 2px 8px;
+      border-radius: 6px;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+
+    /* Top Left Header HUD */
+    .header-hud {
+      position: absolute;
+      top: 24px;
+      left: 28px;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      padding: 5px 14px;
+      border-radius: 9999px;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      background: var(--accent);
+      border-radius: 50%;
+      box-shadow: 0 0 12px var(--accent);
+      animation: pulseGlow 2s infinite ease-in-out;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.8); }
+    }
+
+    h1 {
+      font-size: 27px;
+      font-weight: 900;
+      letter-spacing: -0.7px;
+      line-height: 1.15;
+      margin-bottom: 4px;
+      background: linear-gradient(135deg, #ffffff 40%, #cbd5e1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+    }
+
+    /* Top Center View Mode Tabs */
+    .mode-selector {
+      position: absolute;
+      top: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--card-bg);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--card-border);
+      border-radius: 9999px;
+      padding: 5px;
+      display: flex;
+      gap: 4px;
+      z-index: 10;
+      box-shadow: 0 15px 35px var(--shadow-color);
+    }
+
+    .mode-tab {
+      padding: 8px 18px;
+      border-radius: 9999px;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: none;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .mode-tab:hover {
+      color: var(--text-main);
+    }
+
+    .mode-tab.active {
+      background: var(--accent);
+      color: #040711;
+      font-weight: 800;
+      box-shadow: 0 0 16px var(--accent-glow);
+    }
+
+    /* Sealed Status Notification Pill */
+    .sealed-pill {
+      position: absolute;
+      top: 82px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(16, 185, 129, 0.16);
+      border: 1px solid rgba(16, 185, 129, 0.45);
+      color: #6ee7b7;
+      padding: 6px 20px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 9;
+      font-family: 'JetBrains Mono', monospace;
+      pointer-events: none;
+      box-shadow: 0 4px 20px rgba(16, 185, 129, 0.25);
+      transition: opacity 0.3s ease;
+    }
+
+    /* Right Side Interactive Spec Card */
+    .info-card {
+      position: absolute;
+      top: 24px;
+      right: 28px;
+      width: 360px;
+      background: var(--card-bg);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      border: 1px solid var(--card-border);
+      border-radius: 22px;
+      padding: 24px;
+      z-index: 10;
+      box-shadow: 0 25px 60px var(--shadow-color), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .info-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .layer-pill {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--accent);
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      padding: 4px 10px;
+      border-radius: 8px;
+    }
+
+    .layer-counter {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+    }
+
+    .layer-title {
+      font-size: 21px;
+      font-weight: 900;
+      color: var(--text-main);
+      margin-bottom: 6px;
+      letter-spacing: -0.4px;
+    }
+
+    .layer-spec-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-bottom: 14px;
+      background: rgba(0, 0, 0, 0.35);
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .spec-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .spec-k {
+      font-size: 10px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+    }
+
+    .spec-v {
+      font-size: 12.5px;
+      font-weight: 800;
+      color: #f1f5f9;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .layer-desc {
+      font-size: 13px;
+      line-height: 1.55;
+      color: #cbd5e1;
+      margin-bottom: 14px;
+    }
+
+    .protocol-callout {
+      background: rgba(56, 189, 248, 0.08);
+      border-left: 3px solid var(--accent);
+      padding: 10px 12px;
+      border-radius: 0 8px 8px 0;
+      font-size: 12px;
+      color: #f1f5f9;
+      line-height: 1.45;
+    }
+
+    .protocol-label {
+      font-size: 10.5px;
+      font-weight: 800;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    /* Bottom Controller Floating HUD */
+    .controls-hud {
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--card-bg);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      border: 1px solid var(--card-border);
+      border-radius: 9999px;
+      padding: 10px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      z-index: 10;
+      box-shadow: 0 20px 50px var(--shadow-color);
+    }
+
+    .slider-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .slider-title {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    input[type=range] {
+      -webkit-appearance: none;
+      width: 180px;
+      background: rgba(255, 255, 255, 0.14);
+      height: 6px;
+      border-radius: 9999px;
+      outline: none;
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--accent);
+      cursor: pointer;
+      box-shadow: 0 0 14px var(--accent-glow);
+      transition: transform 0.15s ease;
+    }
+
+    input[type=range]::-webkit-slider-thumb:hover {
+      transform: scale(1.25);
+    }
+
+    .hud-divider {
+      width: 1px;
+      height: 24px;
+      background: var(--card-border);
+    }
+
+    .hud-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      padding: 7px 15px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .hud-btn:hover {
+      background: rgba(255, 255, 255, 0.14);
+      transform: translateY(-1px);
+    }
+
+    .hud-btn.active {
+      background: var(--accent);
+      color: #040711;
+      font-weight: 800;
+      border-color: var(--accent);
+      box-shadow: 0 0 16px var(--accent-glow);
+    }
+
+    .shortcut-hint {
+      position: absolute;
+      bottom: 4px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 10.5px;
+      color: rgba(255, 255, 255, 0.45);
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 0.5px;
+      pointer-events: none;
+      z-index: 10;
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+</head>
+<body data-theme="dark">
+
+  <!-- WebGL 3D Canvas -->
+  <canvas id="webgl-canvas"></canvas>
+
+  <!-- SVG Overlay for Leader Lines -->
+  <svg id="svg-overlay"></svg>
+
+  <!-- Dynamic 3D HTML Floating Labels on Left -->
+  <div id="labels-container"></div>
+
+  <!-- Top Left Header HUD -->
+  <div class="header-hud">
+    <div class="status-badge">
+      <div class="status-dot"></div>
+      M.E.T.S. 04 In-Situ Solid-State Prototype
+    </div>
+    <h1>Photorealistic CR2032 Anatomy</h1>
+    <div class="subtitle">
+      <span>Standard IEC 60086-3 (Ø 20.0 x 3.2 mm)</span>
+      <span>•</span>
+      <span style="color: var(--accent);">Quasi-Solid-State Architecture</span>
+      <span>•</span>
+      <span id="stack-sop-badge" style="font-family: 'JetBrains Mono', monospace; font-size: 11px; background: rgba(16, 185, 129, 0.18); border: 1px solid rgba(16, 185, 129, 0.45); color: #6ee7b7; padding: 2px 8px; border-radius: 6px;">7 Layers • Lab SOP (No Wave Spring)</span>
+    </div>
+  </div>
+
+  <!-- Top Center Mode Selector -->
+  <div class="mode-selector">
+    <button class="mode-tab active" id="tab-exploded">⚡ Exploded View</button>
+    <button class="mode-tab" id="tab-sealed">📦 Sealed Cell (Imploded)</button>
+    <button class="mode-tab" id="tab-cutaway">✂️ 90° Cutaway</button>
+    <button class="mode-tab" id="tab-theme">☀️ Studio Light</button>
+  </div>
+
+  <!-- Sealed Status Notification Pill -->
+  <div class="sealed-pill" id="sealed-status-pill" style="opacity: 0;">
+    <span>🔒 HERMETICALLY SEALED COIN CELL • 900 psi Hydraulic Crimp • 1.0 mm Flat Spacer (Lab SOP) • Ø 20.0 x 3.2 mm</span>
+  </div>
+
+  <!-- Right Side Interactive Spec Card -->
+  <div class="info-card" id="info-card">
+    <div class="info-header">
+      <span class="layer-pill" id="card-pill">LAYER 5 (SPACER)</span>
+      <span class="layer-counter" id="card-counter">6 of 7</span>
+    </div>
+    <div class="layer-title" id="card-title">1.0 mm Ground SS316L Spacer (Lab SOP)</div>
+    <div class="layer-spec-grid" id="card-spec-grid">
+      <div class="spec-item">
+        <span class="spec-k">Diameter</span>
+        <span class="spec-v" id="spec-diameter">15.5 mm Ground Disc</span>
+      </div>
+      <div class="spec-item">
+        <span class="spec-k">Thickness</span>
+        <span class="spec-v" id="spec-thickness">1.00 mm Heavy Spacer</span>
+      </div>
+      <div class="spec-item">
+        <span class="spec-k">Chemistry</span>
+        <span class="spec-v" id="spec-chemistry">SS316L (Planar Ground)</span>
+      </div>
+      <div class="spec-item">
+        <span class="spec-k">Stack Physics</span>
+        <span class="spec-v" id="spec-transference">Direct Planar Contact</span>
+      </div>
+    </div>
+    <div class="layer-desc" id="card-desc">
+      Standard 1.0 mm precision-ground stainless steel 316L disc placed directly over the soft lithium metal chip. Standardized coin cell protocol specifies this single heavy planar spacer to fill the internal cavity with uniform mechanical stack pressure without requiring a wave spring.
+    </div>
+    <div class="protocol-callout">
+      <span class="protocol-label">Laboratory SOP Protocol</span>
+      <span id="card-callout">In glovebox benchtop fabrication, omitting the wave spring eliminates spring slippage, avoids can-rim short circuits, and prevents uneven point-stress gouges into soft lithium metal foil.</span>
+    </div>
+  </div>
+
+  <div class="shortcut-hint">🖱️ Rotate: Left Drag • Zoom: Scroll • Pan: Right Drag • Click Components to Inspect</div>
+
+  <!-- Bottom Floating HUD Controls -->
+  <div class="controls-hud">
+    <div class="slider-group">
+      <span class="slider-title" id="lbl-sealed-side">Imploded</span>
+      <input type="range" id="explode-slider" min="0" max="1" step="0.001" value="0.75">
+      <span class="slider-title" id="lbl-exploded-side" style="color: var(--accent);">Exploded</span>
+    </div>
+
+    <div class="hud-divider"></div>
+
+    <button class="hud-btn" id="btn-toggle-view">
+      <span id="btn-toggle-icon">📦</span>
+      <span id="btn-toggle-text">Implode Cell</span>
+    </button>
+
+    <button class="hud-btn active" id="btn-hardware-mode">
+      <span id="ico-hardware">🔬</span>
+      <span id="txt-hardware">Stack: Flat Spacer (Lab SOP)</span>
+    </button>
+
+    <button class="hud-btn" id="btn-flip">
+      <span>🔄</span>
+      <span>Flip 180°</span>
+    </button>
+
+    <button class="hud-btn active" id="btn-labels-toggle">
+      <span>🏷️</span>
+      <span>Labels On</span>
+    </button>
+
+    <button class="hud-btn active" id="btn-auto-rotate">
+      <span>🌐</span>
+      <span>Auto-Spin</span>
+    </button>
+  </div>
+
+  <script>
+    // =========================================================================
+    // 1. THREE.JS INITIALIZATION & HIGH-CONTRAST PBR RENDERER
+    // =========================================================================
+    const canvas = document.getElementById('webgl-canvas');
+    const renderer = new THREE.WebGLRenderer({
+      canvas,
+      antialias: true,
+      alpha: true,
+      powerPreference: "high-performance"
+    });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.30;
+    renderer.localClippingEnabled = true;
+
+    const scene = new THREE.Scene();
+    scene.fog = new THREE.FogExp2(0x040711, 0.012);
+
+    const camera = new THREE.PerspectiveCamera(34, window.innerWidth / window.innerHeight, 0.1, 100);
+    camera.position.set(22, 16, 26);
+
+    const controls = new THREE.OrbitControls(camera, canvas);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.06;
+    controls.autoRotate = true;
+    controls.autoRotateSpeed = 0.7;
+    controls.maxPolarAngle = Math.PI / 2 + 0.05;
+    controls.target.set(0, 2.2, 0);
+
+    // =========================================================================
+    // 2. PROCEDURAL HIGH-CONTRAST STUDIO ENVIRONMENT MAP (PMREM)
+    // =========================================================================
+    function createStudioEnvironment(renderer) {
+      const pmremGenerator = new THREE.PMREMGenerator(renderer);
+      pmremGenerator.compileEquirectangularShader();
+
+      const c = document.createElement('canvas');
+      c.width = 1024;
+      c.height = 512;
+      const ctx = c.getContext('2d');
+
+      // Studio backdrop with dark gradient and bright softbox lights for metallic reflections
+      const grad = ctx.createLinearGradient(0, 0, 0, 512);
+      grad.addColorStop(0, '#040711');
+      grad.addColorStop(0.4, '#0c152d');
+      grad.addColorStop(0.7, '#070b16');
+      grad.addColorStop(1, '#020408');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 1024, 512);
+
+      // Diffused overhead softbox (pure white high intensity)
+      ctx.fillStyle = '#ffffff';
+      ctx.filter = 'blur(12px)';
+      ctx.fillRect(360, 20, 304, 110);
+
+      // Key light softbox (left)
+      ctx.fillStyle = '#ffffff';
+      ctx.filter = 'blur(20px)';
+      ctx.fillRect(80, 110, 180, 230);
+
+      // Rim light softbox (right)
+      ctx.fillStyle = '#38bdf8';
+      ctx.filter = 'blur(16px)';
+      ctx.fillRect(760, 120, 180, 220);
+
+      ctx.filter = 'none';
+
+      const tex = new THREE.CanvasTexture(c);
+      const envMap = pmremGenerator.fromEquirectangular(tex).texture;
+      pmremGenerator.dispose();
+      return envMap;
+    }
+
+    const studioEnvMap = createStudioEnvironment(renderer);
+    scene.environment = studioEnvMap;
+
+    // Balanced Studio Lights for gleaming stainless steel
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.55);
+    scene.add(ambientLight);
+
+    const keyLight = new THREE.DirectionalLight(0xffffff, 2.2);
+    keyLight.position.set(16, 30, 20);
+    keyLight.castShadow = true;
+    keyLight.shadow.mapSize.width = 2048;
+    keyLight.shadow.mapSize.height = 2048;
+    keyLight.shadow.bias = -0.0001;
+    scene.add(keyLight);
+
+    const fillLight = new THREE.DirectionalLight(0x38bdf8, 1.4);
+    fillLight.position.set(-16, 14, -14);
+    scene.add(fillLight);
+
+    const floorBounce = new THREE.DirectionalLight(0xfde68a, 0.4);
+    floorBounce.position.set(0, -10, 10);
+    scene.add(floorBounce);
+
+    // Floor Shadow Receiver & Engineering Grid
+    const floorGeo = new THREE.PlaneGeometry(80, 80);
+    const floorMat = new THREE.ShadowMaterial({ opacity: 0.45 });
+    const floorMesh = new THREE.Mesh(floorGeo, floorMat);
+    floorMesh.rotation.x = -Math.PI / 2;
+    floorMesh.position.y = -2.8;
+    floorMesh.receiveShadow = true;
+    scene.add(floorMesh);
+
+    const gridHelper = new THREE.GridHelper(40, 40, 0x1e293b, 0x090d16);
+    gridHelper.position.y = -2.81;
+    scene.add(gridHelper);
+
+    // =========================================================================
+    // 3. ULTRA-REALISTIC PROCEDURAL HIGH-RESOLUTION TEXTURES
+    // =========================================================================
+
+    // A. Bold, High-Contrast Laser Engraved Circular Brushed Face (2048x2048)
+    function createRealisticBrushedLaserTexture() {
+      const c = document.createElement('canvas');
+      c.width = 2048;
+      c.height = 2048;
+      const ctx = c.getContext('2d');
+
+      // Base stainless steel plate color
+      ctx.fillStyle = '#d4d8e0';
+      ctx.fillRect(0, 0, 2048, 2048);
+
+      const cx = 1024, cy = 1024;
+
+      // 1. Concentric circular machining micro-grooves
+      ctx.save();
+      for (let r = 15; r < 1000; r += 2) {
+        ctx.strokeStyle = Math.random() > 0.5 ? 'rgba(255,255,255,0.14)' : 'rgba(0,0,0,0.10)';
+        ctx.lineWidth = Math.random() * 2 + 0.5;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
+      // 2. Anisotropic cross-reflections ("butterfly" highlights of circular brushed steel)
+      for (let angle = 0; angle < Math.PI * 2; angle += Math.PI / 2) {
+        const grad = ctx.createRadialGradient(cx, cy, 50, cx, cy, 1000);
+        grad.addColorStop(0, 'rgba(255,255,255,0.25)');
+        grad.addColorStop(0.5, 'rgba(255,255,255,0.12)');
+        grad.addColorStop(1, 'rgba(255,255,255,0.0)');
+
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.arc(cx, cy, 1000, angle - 0.32, angle + 0.32);
+        ctx.closePath();
+        ctx.fill();
+      }
+      ctx.restore();
+
+      // 3. BOLD, HIGH-CONTRAST LASER ENGRAVED MARKINGS (Matching Real CR2032 Photos!)
+      ctx.save();
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+
+      // Laser etch relief effect: dark charcoal burn
+      ctx.fillStyle = '#090d16'; // Deep sharp black-slate laser etch
+
+      // Bold [+] Polarity Symbol (Large & Prominent)
+      ctx.font = 'bold 220px monospace';
+      ctx.fillText('+', cx, 460);
+
+      // Model Designation
+      ctx.font = '900 175px "Inter", -apple-system, sans-serif';
+      ctx.fillText('CR2032', cx, 730);
+
+      // Prototype Brand
+      ctx.font = '800 125px "Inter", -apple-system, sans-serif';
+      ctx.fillText('M.E.T.S. 04', cx, 960);
+
+      // Chemistry
+      ctx.font = '700 82px "Inter", -apple-system, sans-serif';
+      ctx.fillText('LITHIUM SOLID-STATE', cx, 1170);
+
+      // Voltage
+      ctx.font = '800 100px "JetBrains Mono", monospace';
+      ctx.fillText('3.2V', cx, 1340);
+
+      // Architecture
+      ctx.font = '700 68px "Inter", -apple-system, sans-serif';
+      ctx.fillText('QUASI-SOLID-STATE', cx, 1490);
+
+      // 4. PERIMETER KNURLED GRIP MICRO-DOTS (Authentic CR2032 Stamped Rim Ring)
+      ctx.save();
+      const dotRadius = 910;
+      const numDots = 48;
+      for (let i = 0; i < numDots; i++) {
+        const theta = (i / numDots) * Math.PI * 2;
+        const dx = cx + Math.cos(theta) * dotRadius;
+        const dy = cy + Math.sin(theta) * dotRadius;
+
+        // Embossed 3D stamped dimple
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.40)';
+        ctx.beginPath();
+        ctx.arc(dx + 2, dy + 2, 9, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.70)';
+        ctx.beginPath();
+        ctx.arc(dx - 1.5, dy - 1.5, 8, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = 'rgba(100, 116, 139, 0.90)';
+        ctx.beginPath();
+        ctx.arc(dx, dy, 8, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // 5. LASER DOT-MATRIX BATCH & LOT QC CODE (Micro-dots at bottom rim)
+      ctx.fillStyle = '#1e293b';
+      ctx.font = '600 48px "JetBrains Mono", monospace';
+      ctx.letterSpacing = '4px';
+      ctx.fillText('• • • LOT 26-10 / METS-SSB / QC PASS • • •', cx, 1660);
+      ctx.restore();
+
+      // Outer chamfer groove ring
+      ctx.strokeStyle = 'rgba(51, 65, 85, 0.45)';
+      ctx.lineWidth = 10;
+      ctx.beginPath();
+      ctx.arc(cx, cy, 960, 0, Math.PI * 2);
+      ctx.stroke();
+
+      const tex = new THREE.CanvasTexture(c);
+      tex.anisotropy = 16;
+      return tex;
+    }
+
+    // B. Cylindrical Brushed Metal for Outer Wall (Horizontal lathe turning grain)
+    function createBrushedCylinderTexture() {
+      const c = document.createElement('canvas');
+      c.width = 2048;
+      c.height = 512;
+      const ctx = c.getContext('2d');
+      ctx.fillStyle = '#cbd2dc';
+      ctx.fillRect(0, 0, 2048, 512);
+
+      for (let i = 0; i < 8000; i++) {
+        ctx.fillStyle = Math.random() > 0.5 ? 'rgba(255,255,255,0.14)' : 'rgba(0,0,0,0.12)';
+        const y = Math.random() * 512;
+        ctx.fillRect(0, y, 2048, Math.random() * 2 + 0.5);
+      }
+      const tex = new THREE.CanvasTexture(c);
+      tex.wrapS = THREE.RepeatWrapping;
+      tex.wrapT = THREE.RepeatWrapping;
+      tex.anisotropy = 16;
+      return tex;
+    }
+
+    // C. Concentric Lathe Ground Texture for SS316L Spacer
+    function createConcentricGrindTexture() {
+      const c = document.createElement('canvas');
+      c.width = 1024;
+      c.height = 1024;
+      const ctx = c.getContext('2d');
+      ctx.fillStyle = '#d4d8de';
+      ctx.fillRect(0, 0, 1024, 1024);
+
+      for (let r = 10; r < 512; r += 2) {
+        ctx.strokeStyle = Math.random() > 0.5 ? 'rgba(255,255,255,0.16)' : 'rgba(0,0,0,0.12)';
+        ctx.lineWidth = Math.random() * 2;
+        ctx.beginPath();
+        ctx.arc(512, 512, r, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+      return new THREE.CanvasTexture(c);
+    }
+
+    // D. Calendared LiFePO4 Active Electrode Porous Texture
+    function createCathodeTexture() {
+      const c = document.createElement('canvas');
+      c.width = 1024;
+      c.height = 1024;
+      const ctx = c.getContext('2d');
+      ctx.fillStyle = '#111317';
+      ctx.fillRect(0, 0, 1024, 1024);
+
+      for (let i = 0; i < 40000; i++) {
+        ctx.fillStyle = Math.random() > 0.5 ? 'rgba(38,42,50,0.65)' : 'rgba(4,5,7,0.75)';
+        const x = Math.random() * 1024;
+        const y = Math.random() * 1024;
+        ctx.fillRect(x, y, 2, 2);
+      }
+      return new THREE.CanvasTexture(c);
+    }
+
+    // E. Pure Lithium Metal Foil Texture (Silvery sheen with roller lines)
+    function createLithiumTexture() {
+      const c = document.createElement('canvas');
+      c.width = 1024;
+      c.height = 1024;
+      const ctx = c.getContext('2d');
+      ctx.fillStyle = '#f8fafc';
+      ctx.fillRect(0, 0, 1024, 1024);
+
+      for (let i = 0; i < 6000; i++) {
+        ctx.fillStyle = Math.random() > 0.5 ? 'rgba(255,255,255,0.18)' : 'rgba(203,213,225,0.28)';
+        const y = Math.random() * 1024;
+        ctx.fillRect(0, y, 1024, Math.random() * 3 + 1);
+      }
+      return new THREE.CanvasTexture(c);
+    }
+
+    // F. Negative Terminal Contact Face Texture (Concentric contact rings & minus mark)
+    function createNegativeTerminalTexture() {
+      const c = document.createElement('canvas');
+      c.width = 1024;
+      c.height = 1024;
+      const ctx = c.getContext('2d');
+
+      ctx.fillStyle = '#d4d8de';
+      ctx.fillRect(0, 0, 1024, 1024);
+
+      for (let r = 50; r < 480; r += 45) {
+        ctx.strokeStyle = 'rgba(75, 85, 99, 0.45)';
+        ctx.lineWidth = 5;
+        ctx.beginPath();
+        ctx.arc(512, 512, r, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
+      // Knurled contact micro-dimple array (Standard on industrial coin cell negative cans)
+      for (let x = 80; x < 944; x += 32) {
+        for (let y = 80; y < 944; y += 32) {
+          const dist = Math.hypot(x - 512, y - 512);
+          if (dist < 460 && dist > 110) {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.32)';
+            ctx.beginPath();
+            ctx.arc(x + 1.2, y + 1.2, 3.5, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.55)';
+            ctx.beginPath();
+            ctx.arc(x - 1, y - 1, 3.0, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+      }
+
+      ctx.fillStyle = '#1e293b';
+      ctx.font = 'bold 160px monospace';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('—', 512, 512);
+
+      return new THREE.CanvasTexture(c);
+    }
+
+    const brushedLaserFaceTex = createRealisticBrushedLaserTexture();
+    const brushedSideTex = createBrushedCylinderTexture();
+    const concentricTex = createConcentricGrindTexture();
+    const lfpPorousTex = createCathodeTexture();
+    const lithiumTex = createLithiumTexture();
+    const negativeTerminalTex = createNegativeTerminalTexture();
+
+    // =========================================================================
+    // 4. CUTAWAY 90° SECTION PLANES
+    // =========================================================================
+    const cutawayPlaneZ = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+    let isCutawayActive = false;
+
+    // =========================================================================
+    // 5. PHOTOREALISTIC PBR MATERIALS (HIGH SPECULAR STEEL, LITHIUM, EMERALD GASKET)
+    // =========================================================================
+    const steelMaterial = new THREE.MeshStandardMaterial({
+      color: 0xffffff,
+      metalness: 0.96,
+      roughness: 0.16,
+      roughnessMap: brushedSideTex,
+      clippingPlanes: []
+    });
+
+    const engravedLaserFaceMaterial = new THREE.MeshStandardMaterial({
+      color: 0xffffff,
+      map: brushedLaserFaceTex,
+      metalness: 0.94,
+      roughness: 0.18,
+      clippingPlanes: []
+    });
+
+    const negativeTerminalMaterial = new THREE.MeshStandardMaterial({
+      color: 0xffffff,
+      map: negativeTerminalTex,
+      metalness: 0.94,
+      roughness: 0.20,
+      clippingPlanes: []
+    });
+
+    const alFoilMaterial = new THREE.MeshStandardMaterial({
+      color: 0xf8fafc,
+      metalness: 0.98,
+      roughness: 0.08,
+      clippingPlanes: []
+    });
+
+    const lfpCathodeMaterial = new THREE.MeshStandardMaterial({
+      color: 0x111317,
+      map: lfpPorousTex,
+      roughness: 0.88,
+      metalness: 0.10,
+      clippingPlanes: []
+    });
+
+    const gelPrecursorMaterial = new THREE.MeshPhysicalMaterial({
+      color: 0x0284c7,
+      transmission: 0.85,
+      opacity: 0.92,
+      transparent: true,
+      roughness: 0.04,
+      ior: 1.45,
+      clearcoat: 1.0,
+      clearcoatRoughness: 0.03,
+      emissive: 0x0369a1,
+      emissiveIntensity: 0.18,
+      clippingPlanes: []
+    });
+
+    const celgardSeparatorMaterial = new THREE.MeshPhysicalMaterial({
+      color: 0xffffff,
+      transmission: 0.55,
+      opacity: 0.90,
+      transparent: true,
+      roughness: 0.22,
+      ior: 1.48,
+      clearcoat: 0.6,
+      clippingPlanes: []
+    });
+
+    const lithiumAnodeMaterial = new THREE.MeshStandardMaterial({
+      color: 0xf8fafc,
+      map: lithiumTex,
+      metalness: 0.98,
+      roughness: 0.10,
+      clippingPlanes: []
+    });
+
+    const spacerMaterial = new THREE.MeshStandardMaterial({
+      color: 0xe2e8f0,
+      metalness: 0.95,
+      roughness: 0.20,
+      roughnessMap: concentricTex,
+      clippingPlanes: []
+    });
+
+    const waveSpringMaterial = new THREE.MeshStandardMaterial({
+      color: 0x64748b,
+      metalness: 0.96,
+      roughness: 0.14,
+      clippingPlanes: []
+    });
+
+    const gasketMaterial = new THREE.MeshPhysicalMaterial({
+      color: 0x10b981,
+      roughness: 0.32,
+      metalness: 0.04,
+      transmission: 0.20,
+      opacity: 0.98,
+      transparent: true,
+      clippingPlanes: []
+    });
+
+    const allMaterials = [
+      steelMaterial, engravedLaserFaceMaterial, negativeTerminalMaterial, alFoilMaterial,
+      lfpCathodeMaterial, gelPrecursorMaterial, celgardSeparatorMaterial, lithiumAnodeMaterial,
+      spacerMaterial, waveSpringMaterial, gasketMaterial
+    ];
+
+    // =========================================================================
+    // 6. LAYER METADATA SPECIFICATIONS (7-LAYER LAB SOP vs 8-LAYER WITH WAVE SPRING)
+    // =========================================================================
+
+    // 7-LAYER STACK (DEFAULT: LAB PROTOCOL - NO WAVE SPRING)
+    const layersData7 = [
+      {
+        id: 0,
+        meshIdx: 0,
+        tag: "LAYER 0 (BASE)",
+        label: "Positive Can (+)",
+        dim: "Ø 20.0 x 3.0 mm",
+        counter: "1 of 7",
+        title: "Stainless Steel Positive Can (+)",
+        diameter: "20.0 mm Outer",
+        thickness: "3.0 mm Cup Height",
+        chemistry: "SS316L Austenitic",
+        spec4: "Positive Terminal (+)",
+        desc: "Precision stamped SS316L shallow cup that houses the entire electrochemical stack. Features an authentic inward-rolled crimp rim that hermetically swages over the green polypropylene gasket at 900 psi hydraulic pressure.",
+        callout: "The hollow interior cavity holds the cathode disc centered with exact concentricity for uniform current line density."
+      },
+      {
+        id: 1,
+        meshIdx: 1,
+        tag: "LAYER 1 (CATHODE)",
+        label: "LFP / LMFP Cathode",
+        dim: "Ø 14.0 mm • 3.2V / 4.1V",
+        counter: "2 of 7",
+        title: "LFP (3.2V) / High-Voltage LMFP (4.1V) Cathode",
+        diameter: "14.0 mm Disc",
+        thickness: "15 µm Foil + 80 µm Slurry",
+        chemistry: "LiFePO4 or LiMn0.7Fe0.3PO4",
+        spec4: "3.20V / 3.80V Avg • 4.30V Cutoff",
+        desc: "Ready-made Lithium Iron Phosphate (or high-voltage LMFP) coated on battery-grade aluminum foil. Delivers up to 4.10V peak with complete olivine phosphate safety—zero oxygen evolution below 410 °C and safe for SS316L casings.",
+        callout: "Vacuum-bake at 110 °C for 12 hours prior to glovebox assembly to eliminate trace water down to <10 ppm moisture."
+      },
+      {
+        id: 2,
+        meshIdx: 2,
+        tag: "LAYER 2 (PRECURSOR)",
+        label: "In-Situ Gel Precursor",
+        dim: "25 µL Dosed (15+10 µL)",
+        counter: "3 of 7",
+        title: "Capillary Infiltrated Gel Matrix",
+        diameter: "14.0 mm Wetted Zone",
+        thickness: "Sub-micron Pore Filling",
+        chemistry: "Acrylate Matrix + LiTFSI Salt",
+        spec4: "Zero-Gas Thermal Cure",
+        desc: "Formulated with dissolved Lithium Bis(trifluoromethanesulfonyl)imide (LiTFSI) conductive salt paired with crosslinkable acrylate monomers and flame-retardant organophosphates. The bulky TFSI anion provides high salt dissociation and rapid lithium-ion transport through the 3D matrix without HF decomposition risks.",
+        callout: "2-Stage Capillary Dosing: Apply 15 µL on cathode (wait 3 min), then 10 µL on separator (wait 2 min) for 100% void-free interfacial wetting."
+      },
+      {
+        id: 3,
+        meshIdx: 3,
+        tag: "LAYER 3 (SEPARATOR)",
+        label: "Solid Gel Separator",
+        dim: "Ø 16.5 mm (1.25 mm Overhang)",
+        counter: "4 of 7",
+        title: "In-Situ Solid Gel Separator",
+        diameter: "16.5 mm (1.25 mm Margin)",
+        thickness: "25 µm Trilayer",
+        chemistry: "Celgard 2325 + Crosslinked Gel",
+        spec4: "t_Li+ = 0.72 (High Mobility)",
+        desc: "Uncoated Celgard 2325 microporous trilayer (PP/PE/PP) infused with the crosslinked 3D polymer gel network. Permanently immobilizes liquid solvent molecules, extinguishing fire hazard and halting dendrite puncture.",
+        callout: "The 16.5 mm disc creates an indispensable 1.25 mm circumferential safety overhang beyond the 14.0 mm electrodes, physically preventing edge short-circuits during crimping."
+      },
+      {
+        id: 4,
+        meshIdx: 4,
+        tag: "LAYER 4 (ANODE)",
+        label: "Lithium Metal Anode",
+        dim: "Ø 14.0 mm • 3,860 mAh/g",
+        counter: "5 of 7",
+        title: "Pure Lithium Metal Chip",
+        diameter: "14.0 mm Chip",
+        thickness: "450 µm Pure Foil",
+        chemistry: "Pure Lithium Metal (99.9%)",
+        spec4: "3,860 mAh/g Capacity",
+        desc: "Pure metallic lithium foil acting as the ultimate high-capacity anode (>10x higher capacity than commercial graphite). Mechanical shear modulus (>1.0 GPa) of the crosslinked gel suppresses needle-like lithium dendrites.",
+        callout: "Provides boundless lithium inventory, avoiding the 25% irreversible first-cycle lithium trapping loss of un-prelithiated silicon anodes."
+      },
+      {
+        id: 5,
+        meshIdx: 5,
+        tag: "LAYER 5 (SPACER)",
+        label: "SS316L Spacer (1.0 mm)",
+        dim: "Ø 15.5 x 1.0 mm (Lab SOP)",
+        counter: "6 of 7",
+        title: "1.0 mm Ground SS316L Spacer (Lab SOP)",
+        diameter: "15.5 mm Ground Disc",
+        thickness: "1.00 mm Heavy Spacer",
+        chemistry: "SS316L (Planar Ground)",
+        spec4: "Direct Planar Contact",
+        desc: "Standard 1.0 mm precision-ground stainless steel 316L disc placed directly over the soft lithium metal chip. Standardized coin cell protocol specifies this single heavy planar spacer to fill the internal cavity with uniform mechanical stack pressure without requiring a wave spring.",
+        callout: "Lab SOP Reality: In glovebox coin cell fabrication, omitting the wave spring eliminates spring slippage, avoids can-rim short circuits, and prevents uneven point-stress gouges into soft lithium metal foil."
+      },
+      {
+        id: 6,
+        meshIdx: 7, // corresponds to topCapGroup
+        tag: "LAYER 6 (TOP CAP)",
+        label: "Negative Cap & Gasket",
+        dim: "Ø 18.2 mm • 900 psi Crimp",
+        counter: "7 of 7",
+        title: "Negative Cap & Polypropylene Gasket",
+        diameter: "18.2 mm Flanged Cap",
+        thickness: "0.25 mm Stamped Cap",
+        chemistry: "SS316L + Virgin PP",
+        spec4: "Negative Terminal (-)",
+        desc: "Precision-stamped negative terminal cap fitted with an emerald green polypropylene sealing gasket. Clamped directly against the 1.0 mm SS spacer disc during the 900 psi hydraulic crimp stroke, forming the genuine CR2032 sealed cell.",
+        callout: "The PP gasket isolates the negative cap from the positive bottom can while creating a permanent moisture barrier against Mumbai atmospheric humidity."
+      }
+    ];
+
+    // 8-LAYER STACK (OPTIONAL: WITH BELLEVILLE WAVE SPRING)
+    const layersData8 = [
+      {
+        id: 0,
+        meshIdx: 0,
+        tag: "LAYER 0 (BASE)",
+        label: "Positive Can (+)",
+        dim: "Ø 20.0 x 3.0 mm",
+        counter: "1 of 8",
+        title: "Stainless Steel Positive Can (+)",
+        diameter: "20.0 mm Outer",
+        thickness: "3.0 mm Cup Height",
+        chemistry: "SS316L Austenitic",
+        spec4: "Positive Terminal (+)",
+        desc: "Precision stamped SS316L shallow cup that houses the entire electrochemical stack. Features an authentic inward-rolled crimp rim that hermetically swages over the green polypropylene gasket at 900 psi hydraulic pressure.",
+        callout: "The hollow interior cavity holds the cathode disc centered with exact concentricity for uniform current line density."
+      },
+      {
+        id: 1,
+        meshIdx: 1,
+        tag: "LAYER 1 (CATHODE)",
+        label: "LFP / LMFP Cathode",
+        dim: "Ø 14.0 mm • 3.2V / 4.1V",
+        counter: "2 of 8",
+        title: "LFP (3.2V) / High-Voltage LMFP (4.1V) Cathode",
+        diameter: "14.0 mm Disc",
+        thickness: "15 µm Foil + 80 µm Slurry",
+        chemistry: "LiFePO4 or LiMn0.7Fe0.3PO4",
+        spec4: "3.20V / 3.80V Avg • 4.30V Cutoff",
+        desc: "Ready-made Lithium Iron Phosphate (or high-voltage LMFP) coated on battery-grade aluminum foil. Delivers up to 4.10V peak with complete olivine phosphate safety—zero oxygen evolution below 410 °C and safe for SS316L casings.",
+        callout: "Vacuum-bake at 110 °C for 12 hours prior to glovebox assembly to eliminate trace water down to <10 ppm moisture."
+      },
+      {
+        id: 2,
+        meshIdx: 2,
+        tag: "LAYER 2 (PRECURSOR)",
+        label: "In-Situ Gel Precursor",
+        dim: "25 µL Dosed (15+10 µL)",
+        counter: "3 of 8",
+        title: "Capillary Infiltrated Gel Matrix",
+        diameter: "14.0 mm Wetted Zone",
+        thickness: "Sub-micron Pore Filling",
+        chemistry: "Acrylate Matrix + LiTFSI Salt",
+        spec4: "Zero-Gas Thermal Cure",
+        desc: "Formulated with dissolved Lithium Bis(trifluoromethanesulfonyl)imide (LiTFSI) conductive salt paired with crosslinkable acrylate monomers and flame-retardant organophosphates. The bulky TFSI anion provides high salt dissociation and rapid lithium-ion transport through the 3D matrix without HF decomposition risks.",
+        callout: "2-Stage Capillary Dosing: Apply 15 µL on cathode (wait 3 min), then 10 µL on separator (wait 2 min) for 100% void-free interfacial wetting."
+      },
+      {
+        id: 3,
+        meshIdx: 3,
+        tag: "LAYER 3 (SEPARATOR)",
+        label: "Solid Gel Separator",
+        dim: "Ø 16.5 mm (1.25 mm Overhang)",
+        counter: "4 of 8",
+        title: "In-Situ Solid Gel Separator",
+        diameter: "16.5 mm (1.25 mm Margin)",
+        thickness: "25 µm Trilayer",
+        chemistry: "Celgard 2325 + Crosslinked Gel",
+        spec4: "t_Li+ = 0.72 (High Mobility)",
+        desc: "Uncoated Celgard 2325 microporous trilayer (PP/PE/PP) infused with the crosslinked 3D polymer gel network. Permanently immobilizes liquid solvent molecules, extinguishing fire hazard and halting dendrite puncture.",
+        callout: "The 16.5 mm disc creates an indispensable 1.25 mm circumferential safety overhang beyond the 14.0 mm electrodes, physically preventing edge short-circuits during crimping."
+      },
+      {
+        id: 4,
+        meshIdx: 4,
+        tag: "LAYER 4 (ANODE)",
+        label: "Lithium Metal Anode",
+        dim: "Ø 14.0 mm • 3,860 mAh/g",
+        counter: "5 of 8",
+        title: "Pure Lithium Metal Chip",
+        diameter: "14.0 mm Chip",
+        thickness: "450 µm Pure Foil",
+        chemistry: "Pure Lithium Metal (99.9%)",
+        spec4: "3,860 mAh/g Capacity",
+        desc: "Pure metallic lithium foil acting as the ultimate high-capacity anode (>10x higher capacity than commercial graphite). Mechanical shear modulus (>1.0 GPa) of the crosslinked gel suppresses needle-like lithium dendrites.",
+        callout: "Provides boundless lithium inventory, avoiding the 25% irreversible first-cycle lithium trapping loss of un-prelithiated silicon anodes."
+      },
+      {
+        id: 5,
+        meshIdx: 5,
+        tag: "LAYER 5 (SPACER)",
+        label: "SS316L Spacer Disc",
+        dim: "Ø 15.5 x 0.5 mm",
+        counter: "6 of 8",
+        title: "Precision Ground SS316L Spacer",
+        diameter: "15.5 mm Ground Disc",
+        thickness: "0.50 mm Rigid Plate",
+        chemistry: "SS316L (Surface Ground)",
+        spec4: "Current Spreader Plate",
+        desc: "Mirror-ground stainless steel 316L disc placed directly over the soft lithium metal chip. Spreads current lines evenly across the entire 14.0 mm anode face, protecting the soft lithium from direct wave spring contact.",
+        callout: "Acts as a protective buffer so the wave spring crests do not score or puncture the soft lithium metal during crimping."
+      },
+      {
+        id: 6,
+        meshIdx: 6,
+        tag: "LAYER 6 (SPRING)",
+        label: "Belleville Wave Spring",
+        dim: "~0.2 MPa Continuous",
+        counter: "7 of 8",
+        title: "Stamped Belleville Wave Washer",
+        diameter: "15.0 mm Outer Ring",
+        thickness: "0.25 mm Spring Strip",
+        chemistry: "Hardened Spring Steel 304",
+        spec4: "4-Crest Sinusoidal Profile",
+        desc: "True sinusoidal 4-crest corrugated spring washer. Acts as an internal mechanical spring that maintains continuous ~0.2 MPa stack pressure against lithium volume expansion during extended cycling.",
+        callout: "Maintains constant internal stack pressure throughout cycling, though omitted in standard lab SOP to eliminate glovebox spring handling complexity."
+      },
+      {
+        id: 7,
+        meshIdx: 7,
+        tag: "LAYER 7 (TOP CAP)",
+        label: "Negative Cap & Gasket",
+        dim: "Ø 18.2 mm • 900 psi Crimp",
+        counter: "8 of 8",
+        title: "Negative Cap & Polypropylene Gasket",
+        diameter: "18.2 mm Flanged Cap",
+        thickness: "0.25 mm Stamped Cap",
+        chemistry: "SS316L + Virgin PP",
+        spec4: "Negative Terminal (-)",
+        desc: "Precision-stamped negative terminal cap fitted with an emerald green polypropylene sealing gasket. When imploded, it locks perfectly inside the bottom can crimp lip, forming the genuine CR2032 3.2 mm sealed cell profile.",
+        callout: "The PP gasket isolates the negative cap from the positive bottom can while creating a permanent moisture barrier against Mumbai atmospheric humidity."
+      }
+    ];
+
+    // Hardware State: false = Flat Spacer (Lab SOP, default 7 layers); true = + Wave Spring (8 layers)
+    let isWaveSpringEnabled = false;
+
+    // =========================================================================
+    // 7. PRECISION CAD GEOMETRY (AUTHENTIC CR2032 WHEN IMPLODED)
+    // =========================================================================
+    const layersGroup = new THREE.Group();
+    scene.add(layersGroup);
+
+    // -------------------------------------------------------------
+    // LAYER 0: Bottom Positive Can (Clean Vertical Sheet Metal Cup)
+    // -------------------------------------------------------------
+    const canPoints = [
+      new THREE.Vector2(0, 0),
+      new THREE.Vector2(4.75, 0),
+      new THREE.Vector2(5.0, 0.20),
+      new THREE.Vector2(5.0, 1.36),
+      new THREE.Vector2(4.78, 1.45),
+      new THREE.Vector2(4.68, 1.42),
+      new THREE.Vector2(4.74, 1.25),
+      new THREE.Vector2(4.74, 0.12),
+      new THREE.Vector2(0, 0.12)
+    ];
+    const canGeo = new THREE.LatheGeometry(canPoints, 96);
+    const canMesh = new THREE.Mesh(canGeo, steelMaterial);
+    canMesh.castShadow = true;
+    canMesh.receiveShadow = true;
+    canMesh.userData = { meshIdx: 0, collapsedY: 0.0, explodedY: 0.0 };
+
+    // Laser-engraved disc on bottom face of can
+    const canBottomDiscGeo = new THREE.CircleGeometry(4.72, 64);
+    canBottomDiscGeo.rotateX(Math.PI / 2);
+    const canBottomDiscMesh = new THREE.Mesh(canBottomDiscGeo, engravedLaserFaceMaterial);
+    canBottomDiscMesh.position.y = -0.002;
+    canMesh.add(canBottomDiscMesh);
+    layersGroup.add(canMesh);
+
+    // -------------------------------------------------------------
+    // LAYER 1: LFP Cathode Disc (Rests on Can Floor: y = 0.12 to 0.24)
+    // -------------------------------------------------------------
+    const cathodeGroup = new THREE.Group();
+    const alFoilGeo = new THREE.CylinderGeometry(3.5, 3.5, 0.03, 64);
+    const alFoilMesh = new THREE.Mesh(alFoilGeo, alFoilMaterial);
+    alFoilMesh.position.y = -0.04;
+    cathodeGroup.add(alFoilMesh);
+
+    const lfpGeo = new THREE.CylinderGeometry(3.5, 3.5, 0.09, 64);
+    const lfpMesh = new THREE.Mesh(lfpGeo, lfpCathodeMaterial);
+    lfpMesh.position.y = 0.02;
+    cathodeGroup.add(lfpMesh);
+    cathodeGroup.userData = { meshIdx: 1, collapsedY: 0.20, explodedY: 2.0 };
+    layersGroup.add(cathodeGroup);
+
+    // -------------------------------------------------------------
+    // LAYER 2: In-Situ Gel Precursor Wetting Layer
+    // -------------------------------------------------------------
+    const precursorGeo = new THREE.CylinderGeometry(3.51, 3.51, 0.04, 64);
+    const precursorMesh = new THREE.Mesh(precursorGeo, gelPrecursorMaterial);
+    precursorMesh.userData = { meshIdx: 2, collapsedY: 0.30, explodedY: 4.0 };
+    layersGroup.add(precursorMesh);
+
+    // -------------------------------------------------------------
+    // LAYER 3: Celgard Separator Gel Disc (16.5 mm = radius 4.125)
+    // -------------------------------------------------------------
+    const separatorGeo = new THREE.CylinderGeometry(4.125, 4.125, 0.08, 64);
+    const separatorMesh = new THREE.Mesh(separatorGeo, celgardSeparatorMaterial);
+    separatorMesh.userData = { meshIdx: 3, collapsedY: 0.40, explodedY: 6.0 };
+    layersGroup.add(separatorMesh);
+
+    // -------------------------------------------------------------
+    // LAYER 4: Pure Lithium Metal Anode Chip (14.0 mm = radius 3.5)
+    // -------------------------------------------------------------
+    const lithiumGeo = new THREE.CylinderGeometry(3.5, 3.5, 0.16, 64);
+    const lithiumMesh = new THREE.Mesh(lithiumGeo, lithiumAnodeMaterial);
+    lithiumMesh.userData = { meshIdx: 4, collapsedY: 0.56, explodedY: 8.0 };
+    layersGroup.add(lithiumMesh);
+
+    // -------------------------------------------------------------
+    // LAYER 5: SS316L Ground Spacer Disc (15.5 mm = radius 3.875)
+    // -------------------------------------------------------------
+    const spacerGeo = new THREE.CylinderGeometry(3.875, 3.875, 0.20, 64);
+    const spacerMesh = new THREE.Mesh(spacerGeo, spacerMaterial);
+    spacerMesh.userData = { meshIdx: 5, collapsedY: 0.82, explodedY: 10.0 };
+    layersGroup.add(spacerMesh);
+
+    // -------------------------------------------------------------
+    // LAYER 6: Real Corrugated Belleville Wave Spring Ribbon (4 Waves)
+    // -------------------------------------------------------------
+    function createCorrugatedWaveWasher(innerR = 2.9, outerR = 3.8, waveAmp = 0.28, waves = 4, thickness = 0.10, segments = 160) {
+      const geo = new THREE.BufferGeometry();
+      const vertices = [];
+      const indices = [];
+      const uvs = [];
+
+      for (let i = 0; i <= segments; i++) {
+        const u = i / segments;
+        const theta = u * Math.PI * 2;
+        const cos = Math.cos(theta);
+        const sin = Math.sin(theta);
+        const baseZ = Math.sin(theta * waves) * waveAmp;
+
+        const topY = baseZ + thickness * 0.5;
+        const botY = baseZ - thickness * 0.5;
+
+        vertices.push(innerR * cos, topY, innerR * sin);
+        vertices.push(outerR * cos, topY, outerR * sin);
+        vertices.push(outerR * cos, botY, outerR * sin);
+        vertices.push(innerR * cos, botY, innerR * sin);
+
+        uvs.push(0, u, 1, u, 1, u, 0, u);
+      }
+
+      for (let i = 0; i < segments; i++) {
+        const c = i * 4;
+        const n = (i + 1) * 4;
+
+        indices.push(c + 0, c + 1, n + 1);
+        indices.push(c + 0, n + 1, n + 0);
+        indices.push(c + 3, n + 2, c + 2);
+        indices.push(c + 3, n + 3, n + 2);
+        indices.push(c + 1, c + 2, n + 2);
+        indices.push(c + 1, n + 2, n + 1);
+        indices.push(c + 0, n + 3, c + 3);
+        indices.push(c + 0, n + 0, n + 3);
+      }
+
+      geo.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+      geo.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
+      geo.setIndex(indices);
+      geo.computeVertexNormals();
+      return geo;
+    }
+
+    const waveWasherGeo = createCorrugatedWaveWasher();
+    const waveWasherMesh = new THREE.Mesh(waveWasherGeo, waveSpringMaterial);
+    waveWasherMesh.userData = { meshIdx: 6, collapsedY: 1.00, explodedY: 10.8 };
+    layersGroup.add(waveWasherMesh);
+
+    // -------------------------------------------------------------
+    // LAYER 7: Negative Top Cap with Stepped Boss & Emerald Green PP Gasket
+    // -------------------------------------------------------------
+    const topCapGroup = new THREE.Group();
+
+    const capPoints = [
+      new THREE.Vector2(0, 0.40),
+      new THREE.Vector2(3.1, 0.40),
+      new THREE.Vector2(3.4, 0.28),
+      new THREE.Vector2(4.25, 0.28),
+      new THREE.Vector2(4.45, 0.0),
+      new THREE.Vector2(4.55, 0.05),
+      new THREE.Vector2(4.48, 0.30),
+      new THREE.Vector2(3.5, 0.35),
+      new THREE.Vector2(3.2, 0.52),
+      new THREE.Vector2(0, 0.52)
+    ];
+    const capGeo = new THREE.LatheGeometry(capPoints, 96);
+    const capMesh = new THREE.Mesh(capGeo, steelMaterial);
+    capMesh.castShadow = true;
+    topCapGroup.add(capMesh);
+
+    // Laser engraving on top cap face
+    const capTopDiscGeo = new THREE.CircleGeometry(3.18, 64);
+    capTopDiscGeo.rotateX(-Math.PI / 2);
+    const capTopDiscMesh = new THREE.Mesh(capTopDiscGeo, engravedLaserFaceMaterial);
+    capTopDiscMesh.position.y = 0.522;
+    topCapGroup.add(capTopDiscMesh);
+
+    // Emerald Green Polypropylene Gasket Ring
+    const gasketPoints = [
+      new THREE.Vector2(4.35, 0.0),
+      new THREE.Vector2(4.72, 0.0),
+      new THREE.Vector2(4.72, 0.38),
+      new THREE.Vector2(4.52, 0.38),
+      new THREE.Vector2(4.52, 0.12),
+      new THREE.Vector2(4.35, 0.12)
+    ];
+    const gasketGeo = new THREE.LatheGeometry(gasketPoints, 80);
+    const gasketMesh = new THREE.Mesh(gasketGeo, gasketMaterial);
+    topCapGroup.add(gasketMesh);
+
+    topCapGroup.userData = { meshIdx: 7, collapsedY: 1.08, explodedY: 12.2 };
+    layersGroup.add(topCapGroup);
+
+    // Center whole assembly in world space
+    layersGroup.position.y = -1.0;
+
+    // =========================================================================
+    // 8. DYNAMIC 3D LEADER LINES & LABELS (LEFT ANCHORED)
+    // =========================================================================
+    const labelsContainer = document.getElementById('labels-container');
+    const svgOverlay = document.getElementById('svg-overlay');
+    const labelElements = [];
+    const lineElements = [];
+    const dotElements = [];
+
+    function buildLabelsAndLines() {
+      labelsContainer.innerHTML = '';
+      svgOverlay.innerHTML = '';
+      labelElements.length = 0;
+      lineElements.length = 0;
+      dotElements.length = 0;
+
+      const currentLayers = isWaveSpringEnabled ? layersData8 : layersData7;
+
+      currentLayers.forEach((layer, idx) => {
+        const badge = document.createElement('div');
+        badge.className = 'callout-badge';
+        badge.innerHTML = `
+          <div class="callout-indicator"></div>
+          <span class="callout-title">${layer.label}</span>
+          <span class="callout-dim">${layer.dim}</span>
+        `;
+        badge.addEventListener('click', () => {
+          selectLayer(idx);
+        });
+        labelsContainer.appendChild(badge);
+        labelElements.push(badge);
+
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+        path.setAttribute('stroke', '#38bdf8');
+        path.setAttribute('stroke-width', '1.5');
+        path.setAttribute('fill', 'none');
+        svgOverlay.appendChild(path);
+        lineElements.push(path);
+
+        const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        dot.setAttribute('r', '3.5');
+        dot.setAttribute('fill', '#38bdf8');
+        dot.setAttribute('stroke', '#ffffff');
+        dot.setAttribute('stroke-width', '1.5');
+        svgOverlay.appendChild(dot);
+        dotElements.push(dot);
+      });
+    }
+
+    let labelsVisible = true;
+    const btnLabelsToggle = document.getElementById('btn-labels-toggle');
+    btnLabelsToggle.addEventListener('click', () => {
+      labelsVisible = !labelsVisible;
+      btnLabelsToggle.classList.toggle('active', labelsVisible);
+      btnLabelsToggle.innerHTML = labelsVisible ? '<span>🏷️</span><span>Labels On</span>' : '<span>🏷️</span><span>Labels Off</span>';
+      updateFloatingLabels();
+    });
+
+    const tempWorldPos = new THREE.Vector3();
+    const tempCameraLeft = new THREE.Vector3();
+
+    function updateFloatingLabels() {
+      const opacity = labelsVisible ? Math.min(Math.max((explodeProgress - 0.10) / 0.35, 0), 1) : 0;
+      labelsContainer.style.opacity = opacity;
+      svgOverlay.style.opacity = opacity;
+
+      const sealedPill = document.getElementById('sealed-status-pill');
+      if (explodeProgress <= 0.05 && !isCutawayActive) {
+        sealedPill.style.opacity = '1';
+        sealedPill.innerHTML = isWaveSpringEnabled ?
+          '<span>🔒 HERMETICALLY SEALED COIN CELL • 900 psi Hydraulic Crimp • Wave Spring Stack • Ø 20.0 x 3.2 mm</span>' :
+          '<span>🔒 HERMETICALLY SEALED COIN CELL • 900 psi Hydraulic Crimp • 1.0 mm Flat Spacer (Lab SOP) • Ø 20.0 x 3.2 mm</span>';
+      } else {
+        sealedPill.style.opacity = '0';
+      }
+
+      if (opacity <= 0) return;
+
+      tempCameraLeft.set(-1, 0, 0).applyQuaternion(camera.quaternion).normalize();
+
+      const currentMeshes = isWaveSpringEnabled ?
+        [canMesh, cathodeGroup, precursorMesh, separatorMesh, lithiumMesh, spacerMesh, waveWasherMesh, topCapGroup] :
+        [canMesh, cathodeGroup, precursorMesh, separatorMesh, lithiumMesh, spacerMesh, topCapGroup];
+
+      const currentRadii = isWaveSpringEnabled ?
+        [5.0, 3.5, 3.51, 4.125, 3.5, 3.875, 3.8, 4.55] :
+        [5.0, 3.5, 3.51, 4.125, 3.5, 3.875, 4.55];
+
+      currentMeshes.forEach((mesh, idx) => {
+        mesh.getWorldPosition(tempWorldPos);
+
+        const r = currentRadii[idx] || 3.5;
+        tempWorldPos.addScaledVector(tempCameraLeft, r);
+
+        tempWorldPos.project(camera);
+
+        const screenX = (tempWorldPos.x * 0.5 + 0.5) * window.innerWidth;
+        const screenY = (-tempWorldPos.y * 0.5 + 0.5) * window.innerHeight;
+
+        const badge = labelElements[idx];
+        const path = lineElements[idx];
+        const dot = dotElements[idx];
+
+        if (badge && path && dot) {
+          const badgeX = screenX - 45;
+          const badgeY = screenY;
+
+          badge.style.left = `${badgeX}px`;
+          badge.style.top = `${badgeY}px`;
+
+          const doglegX = screenX - 25;
+          path.setAttribute('points', `${screenX},${screenY} ${doglegX},${screenY} ${badgeX},${badgeY}`);
+
+          dot.setAttribute('cx', screenX);
+          dot.setAttribute('cy', screenY);
+        }
+      });
+    }
+
+    // =========================================================================
+    // 9. EXPLODE / IMPLODE INTERPOLATION WITH COMPRESSION PHYSICS
+    // =========================================================================
+    const slider = document.getElementById('explode-slider');
+    let explodeProgress = parseFloat(slider.value);
+
+    function updateLayerPositions(progress) {
+      const currentMeshes = isWaveSpringEnabled ?
+        [canMesh, cathodeGroup, precursorMesh, separatorMesh, lithiumMesh, spacerMesh, waveWasherMesh, topCapGroup] :
+        [canMesh, cathodeGroup, precursorMesh, separatorMesh, lithiumMesh, spacerMesh, topCapGroup];
+
+      currentMeshes.forEach((mesh) => {
+        const y = THREE.MathUtils.lerp(mesh.userData.collapsedY, mesh.userData.explodedY, progress);
+        mesh.position.y = y;
+
+        if (mesh === waveWasherMesh) {
+          const springComp = THREE.MathUtils.lerp(0.25, 1.0, progress);
+          mesh.scale.set(1.0, springComp, 1.0);
+        }
+      });
+      updateFloatingLabels();
+    }
+
+    slider.addEventListener('input', (e) => {
+      explodeProgress = parseFloat(e.target.value);
+      updateLayerPositions(explodeProgress);
+      updateViewToggleUI();
+      updateModeTabsUI();
+    });
+
+    const btnToggleView = document.getElementById('btn-toggle-view');
+    const btnToggleIcon = document.getElementById('btn-toggle-icon');
+    const btnToggleText = document.getElementById('btn-toggle-text');
+
+    function updateViewToggleUI() {
+      if (explodeProgress > 0.5) {
+        btnToggleIcon.textContent = "📦";
+        btnToggleText.textContent = "Implode Cell";
+      } else {
+        btnToggleIcon.textContent = "⚡";
+        btnToggleText.textContent = "Explode View";
+      }
+    }
+
+    let isAnimatingToggle = false;
+    let targetProgress = explodeProgress;
+
+    btnToggleView.addEventListener('click', () => {
+      targetProgress = explodeProgress > 0.5 ? 0.0 : 0.85;
+      isAnimatingToggle = true;
+    });
+
+    // Hardware Mode Switcher: 7-Layer Flat Spacer (Lab SOP) vs 8-Layer Wave Spring
+    const btnHardwareMode = document.getElementById('btn-hardware-mode');
+    const txtHardware = document.getElementById('txt-hardware');
+    const icoHardware = document.getElementById('ico-hardware');
+    const stackSopBadge = document.getElementById('stack-sop-badge');
+
+    function applyHardwareConfig() {
+      if (!isWaveSpringEnabled) {
+        // 7 LAYERS: LAB SOP (1.0 mm Flat Spacer, No Wave Spring)
+        waveWasherMesh.visible = false;
+        spacerMesh.scale.set(1.0, 2.0, 1.0); // 1.0 mm thickness (2x visual height)
+
+        canMesh.userData.collapsedY = 0.0;
+        canMesh.userData.explodedY = 0.0;
+
+        cathodeGroup.userData.collapsedY = 0.20;
+        cathodeGroup.userData.explodedY = 2.0;
+
+        precursorMesh.userData.collapsedY = 0.30;
+        precursorMesh.userData.explodedY = 4.0;
+
+        separatorMesh.userData.collapsedY = 0.40;
+        separatorMesh.userData.explodedY = 6.0;
+
+        lithiumMesh.userData.collapsedY = 0.56;
+        lithiumMesh.userData.explodedY = 8.0;
+
+        spacerMesh.userData.collapsedY = 0.82;
+        spacerMesh.userData.explodedY = 10.0;
+
+        topCapGroup.userData.collapsedY = 1.08;
+        topCapGroup.userData.explodedY = 12.2;
+
+        txtHardware.textContent = "Stack: Flat Spacer (Lab SOP)";
+        icoHardware.textContent = "🔬";
+        btnHardwareMode.classList.add('active');
+
+        if (stackSopBadge) {
+          stackSopBadge.textContent = "7 Layers • Lab SOP (No Wave Spring)";
+          stackSopBadge.style.color = "#6ee7b7";
+          stackSopBadge.style.borderColor = "rgba(16, 185, 129, 0.45)";
+          stackSopBadge.style.background = "rgba(16, 185, 129, 0.18)";
+        }
+      } else {
+        // 8 LAYERS: WITH BELLEVILLE WAVE SPRING
+        waveWasherMesh.visible = true;
+        spacerMesh.scale.set(1.0, 1.0, 1.0); // 0.5 mm thickness
+
+        canMesh.userData.collapsedY = 0.0;
+        canMesh.userData.explodedY = 0.0;
+
+        cathodeGroup.userData.collapsedY = 0.20;
+        cathodeGroup.userData.explodedY = 1.8;
+
+        precursorMesh.userData.collapsedY = 0.30;
+        precursorMesh.userData.explodedY = 3.6;
+
+        separatorMesh.userData.collapsedY = 0.40;
+        separatorMesh.userData.explodedY = 5.4;
+
+        lithiumMesh.userData.collapsedY = 0.56;
+        lithiumMesh.userData.explodedY = 7.2;
+
+        spacerMesh.userData.collapsedY = 0.78;
+        spacerMesh.userData.explodedY = 9.0;
+
+        waveWasherMesh.userData.collapsedY = 1.00;
+        waveWasherMesh.userData.explodedY = 10.8;
+
+        topCapGroup.userData.collapsedY = 1.08;
+        topCapGroup.userData.explodedY = 12.8;
+
+        txtHardware.textContent = "Stack: + Wave Spring";
+        icoHardware.textContent = "⚙️";
+        btnHardwareMode.classList.remove('active');
+
+        if (stackSopBadge) {
+          stackSopBadge.textContent = "8 Layers • Wave Spring Stack";
+          stackSopBadge.style.color = "#38bdf8";
+          stackSopBadge.style.borderColor = "rgba(56, 189, 248, 0.45)";
+          stackSopBadge.style.background = "rgba(56, 189, 248, 0.18)";
+        }
+      }
+
+      buildLabelsAndLines();
+      updateLayerPositions(explodeProgress);
+      const currentLayers = isWaveSpringEnabled ? layersData8 : layersData7;
+      selectLayer(Math.min(activeLayerIndex, currentLayers.length - 1));
+    }
+
+    btnHardwareMode.addEventListener('click', () => {
+      isWaveSpringEnabled = !isWaveSpringEnabled;
+      applyHardwareConfig();
+    });
+
+    // 180° Flip Button
+    let isFlipped = false;
+    const btnFlip = document.getElementById('btn-flip');
+    let targetRotationX = 0;
+    let isAnimatingFlip = false;
+
+    btnFlip.addEventListener('click', () => {
+      isFlipped = !isFlipped;
+      targetRotationX = isFlipped ? Math.PI : 0;
+      isAnimatingFlip = true;
+    });
+
+    // Auto-Rotate Button
+    const btnAutoRotate = document.getElementById('btn-auto-rotate');
+    btnAutoRotate.addEventListener('click', () => {
+      controls.autoRotate = !controls.autoRotate;
+      btnAutoRotate.classList.toggle('active', controls.autoRotate);
+    });
+
+    // =========================================================================
+    // 10. INTERACTIVE SPEC CARD SELECTION
+    // =========================================================================
+    let activeLayerIndex = 5; // Default to 1.0 mm SS316L Ground Spacer (Lab SOP)
+
+    function selectLayer(idx) {
+      activeLayerIndex = idx;
+      const currentLayers = isWaveSpringEnabled ? layersData8 : layersData7;
+      const data = currentLayers[idx];
+      if (!data) return;
+
+      document.getElementById('card-pill').textContent = data.tag;
+      document.getElementById('card-counter').textContent = data.counter;
+      document.getElementById('card-title').textContent = data.title;
+      document.getElementById('spec-diameter').textContent = data.diameter;
+      document.getElementById('spec-thickness').textContent = data.thickness;
+      document.getElementById('spec-chemistry').textContent = data.chemistry;
+      document.getElementById('spec-transference').textContent = data.spec4;
+      document.getElementById('card-desc').textContent = data.desc;
+      document.getElementById('card-callout').textContent = data.callout;
+
+      labelElements.forEach((b, i) => {
+        b.classList.toggle('active', i === idx);
+      });
+
+      const card = document.getElementById('info-card');
+      card.style.borderColor = "var(--accent)";
+      card.style.boxShadow = "0 25px 60px var(--accent-glow)";
+      setTimeout(() => {
+        card.style.borderColor = "var(--card-border)";
+        card.style.boxShadow = "0 25px 60px var(--shadow-color)";
+      }, 400);
+    }
+
+    // Raycast on Click
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
+
+    window.addEventListener('pointerdown', (e) => {
+      if (e.target.closest('.controls-hud') || e.target.closest('.info-card') || e.target.closest('.callout-badge') || e.target.closest('.mode-selector')) return;
+
+      mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObjects(layersGroup.children, true);
+
+      if (intersects.length > 0) {
+        let hit = intersects[0].object;
+        while (hit.parent && hit.parent !== layersGroup) {
+          hit = hit.parent;
+        }
+        if (hit.userData && hit.userData.meshIdx !== undefined) {
+          const meshIdx = hit.userData.meshIdx;
+          const currentLayers = isWaveSpringEnabled ? layersData8 : layersData7;
+          const targetIdx = currentLayers.findIndex(l => l.meshIdx === meshIdx);
+          if (targetIdx !== -1) {
+            selectLayer(targetIdx);
+
+            const orig = hit.scale.x;
+            hit.scale.set(orig * 1.04, hit.scale.y * 1.04, orig * 1.04);
+            setTimeout(() => {
+              hit.scale.set(orig, hit.scale.y / 1.04, orig);
+            }, 130);
+          }
+        }
+      }
+    });
+
+    // =========================================================================
+    // 11. TOP MODE TABS (EXPLODED, SEALED, 90° CUTAWAY, STUDIO THEME)
+    // =========================================================================
+    const tabExploded = document.getElementById('tab-exploded');
+    const tabSealed = document.getElementById('tab-sealed');
+    const tabCutaway = document.getElementById('tab-cutaway');
+    const tabTheme = document.getElementById('tab-theme');
+
+    function setActiveTab(tab) {
+      [tabExploded, tabSealed, tabCutaway].forEach(t => t.classList.remove('active'));
+      if (tab !== tabTheme) tab.classList.add('active');
+    }
+
+    function updateModeTabsUI() {
+      if (explodeProgress < 0.1 && !isCutawayActive) {
+        setActiveTab(tabSealed);
+      } else if (explodeProgress > 0.4 && !isCutawayActive) {
+        setActiveTab(tabExploded);
+      }
+    }
+
+    tabExploded.addEventListener('click', () => {
+      setActiveTab(tabExploded);
+      setCutaway(false);
+      targetProgress = 0.85;
+      isAnimatingToggle = true;
+    });
+
+    tabSealed.addEventListener('click', () => {
+      setActiveTab(tabSealed);
+      setCutaway(false);
+      targetProgress = 0.0;
+      isAnimatingToggle = true;
+    });
+
+    tabCutaway.addEventListener('click', () => {
+      setActiveTab(tabCutaway);
+      setCutaway(!isCutawayActive);
+      if (explodeProgress > 0.4) {
+        targetProgress = 0.25;
+        isAnimatingToggle = true;
+      }
+    });
+
+    function setCutaway(enabled) {
+      isCutawayActive = enabled;
+      const planes = enabled ? [cutawayPlaneZ] : [];
+      allMaterials.forEach(mat => {
+        mat.clippingPlanes = planes;
+      });
+    }
+
+    // Light / Dark Theme Switcher
+    let isDark = true;
+    tabTheme.addEventListener('click', () => {
+      isDark = !isDark;
+      document.body.setAttribute('data-theme', isDark ? 'dark' : 'light');
+      tabTheme.innerHTML = isDark ? '☀️ Studio Light' : '🌙 Titanium Dark';
+      gridHelper.material.color.setHex(isDark ? 0x1e293b : 0x94a3b8);
+      gridHelper.material.opacity = isDark ? 0.3 : 0.6;
+    });
+
+    // Initial setup: Configure 7-layer Lab SOP default
+    applyHardwareConfig();
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      updateFloatingLabels();
+    });
+
+    // =========================================================================
+    // 12. CONTINUOUS ANIMATION LOOP
+    // =========================================================================
+    function animate() {
+      requestAnimationFrame(animate);
+
+      if (isAnimatingToggle) {
+        explodeProgress += (targetProgress - explodeProgress) * 0.09;
+        slider.value = explodeProgress;
+        updateLayerPositions(explodeProgress);
+        if (Math.abs(targetProgress - explodeProgress) < 0.004) {
+          explodeProgress = targetProgress;
+          slider.value = explodeProgress;
+          updateLayerPositions(explodeProgress);
+          isAnimatingToggle = false;
+          updateViewToggleUI();
+          updateModeTabsUI();
+        }
+      }
+
+      if (isAnimatingFlip) {
+        layersGroup.rotation.x += (targetRotationX - layersGroup.rotation.x) * 0.08;
+        if (Math.abs(targetRotationX - layersGroup.rotation.x) < 0.005) {
+          layersGroup.rotation.x = targetRotationX;
+          isAnimatingFlip = false;
+        }
+      }
+
+      controls.update();
+      updateFloatingLabels();
+      renderer.render(scene, camera);
+    }
+
+    animate();
+  </script>
+</body>
+</html>
