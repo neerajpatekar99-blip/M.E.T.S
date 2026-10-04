@@ -11,18 +11,6 @@ A drop-in quasi-solid-state lithium metal battery architecture engineered to eli
 
 ---
 
-## ⚡ Interactive 3D Cell Anatomy
-
-This repository includes a standalone, photorealistic 3D WebGL model (`index.html`) demonstrating the internal layer-by-layer anatomy of the M.E.T.S. cell architecture.
-
-- **Exploded & Sealed Views:** Interactive continuous slider animating the transition between hermetically crimped and exploded mechanical states.
-- **Micro-Interfacial Inspection:** Visualizes the conformal contact between the in-situ crosslinked gel-polymer matrix, cathode active particles, and the lithium metal anode.
-- **Dynamic Leader Lines & HUD:** Real-time dynamic SVG callouts detailing layer thicknesses, material selections, and mechanical stack physics.
-- **Dual Visual Themes:** High-contrast Titanium Dark and Studio Light modes.
-
-> **To View Locally:** Clone the repository and double-click `index.html` in any modern web browser (no local server or build tools required).
-
----
 
 ## 🎯 The Core Problem
 
@@ -41,6 +29,25 @@ Project M.E.T.S. resolves this industrial impasse through a **quasi-solid-state 
 3. **Intrinsic Fire Suppression:** Integrated non-flammable organophosphate chemistry captures combustion free radicals during electrical or thermal stress, achieving a Self-Extinguishing Time (SET) of 0 seconds.
 4. **Mechanical Dendrite Suppression:** The dense crosslinked matrix and high stack uniformity prevent localized current hotspots, suppressing sharp lithium dendrite nucleation.
 5. **Zero Factory Retooling:** Operates seamlessly on existing roll-to-roll assembly lines without requiring multi-billion-dollar factory redesigns.
+
+---
+
+## 🔬 Branched Research Methodology
+
+To maintain strict scientific reproducibility and preserve control baselines, Project M.E.T.S. is organized into isolated research tracks:
+
+* **Track A — Baseline Architecture (Control):**
+  * Standardized CR2032 coin-cell form factor for benchtop reproducibility.
+  * Olivine phosphate cathode chemistry (LFP, 3.2V) paired with the in-situ crosslinked gel-polymer matrix.
+  * Planar SS316L pressure distribution for uniform interfacial contact across the soft lithium metal anode.
+  * Primary objective: Eliminate volatile flammability (SET = 0s) while demonstrating drop-in roll-to-roll manufacturing compatibility.
+
+* **Track B — Advanced Experimental Betterments:**
+  * High-voltage dual-plateau olivine chemistry (LMFP, delivering up to 4.1V cutoff) to maximize specific energy density.
+  * Interfacial buffer layers and surface pre-passivation on the lithium metal anode to prevent transient voltage sag during high C-rate power pulses.
+  * Multi-salt electrolyte formulations optimized for wide electrochemical voltage stability windows.
+
+> **Research Integrity Notice:** To protect intellectual property and preserve baseline reproducibility, experimental variant formulations, exact precursor molarities, and laboratory synthesis SOPs are maintained in isolated private research branches.
 
 ---
 
