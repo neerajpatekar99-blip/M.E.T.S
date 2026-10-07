@@ -26,9 +26,9 @@ To address safety and energy density, industry leaders are pursuing all-solid-st
 
 Project M.E.T.S. resolves this industrial impasse through a **quasi-solid-state drop-in architecture**:
 
-1. **In-Situ Thermal Polymerization with LiTFSI Salt:** The cell is injected with a low-viscosity liquid precursor containing crosslinkable acrylate monomers, flame-retardant organophosphates, and dissolved Lithium Bis(trifluoromethanesulfonyl)imide (LiTFSI) conductive salt. The bulky TFSI anion facilitates high salt dissociation and rapid lithium-ion mobility without the hydrofluoric acid degradation risks of traditional salts. Upon mild thermal activation post-sealing (60°C), the precursor cures directly within the cell to form a robust 3D gel-polymer network.
+1. **In-Situ Thermal Polymerization Architecture:** The cell is injected with a low-viscosity liquid precursor containing functional crosslinkable monomers, non-flammable liquid carriers, and high-dissociation conductive lithium salts. The formulation facilitates rapid lithium-ion mobility while eliminating the volatile degradation risks of conventional liquid electrolytes. Upon mild thermal activation post-sealing, the precursor cures directly within the hermetic cell enclosure to form a robust 3D quasi-solid gel-polymer network.
 2. **Conformal Interfacial Contact:** Because polymerization occurs *after* liquid infiltration, the polymer wets 100% of the active cathode pores, eliminating the massive interfacial impedance typical of dry ceramic solid electrolytes.
-3. **Intrinsic Fire Suppression:** Integrated non-flammable organophosphate chemistry captures combustion free radicals during electrical or thermal stress, achieving a Self-Extinguishing Time (SET) of 0 seconds.
+3. **Intrinsic Fire Suppression:** Integrated non-flammable functional chemistry captures combustion free radicals during electrical or thermal stress, achieving a Self-Extinguishing Time (SET) of 0 seconds.
 4. **Mechanical Dendrite Suppression:** The dense crosslinked matrix and high stack uniformity prevent localized current hotspots, suppressing sharp lithium dendrite nucleation.
 5. **Zero Factory Retooling:** Operates seamlessly on existing roll-to-roll assembly lines without requiring multi-billion-dollar factory redesigns.
 
@@ -79,7 +79,7 @@ Pouch-cell scaling does not require altered chemical synthesis; it relies on par
 1. **Automated Z-Fold Stacking:** Cathode sheets (double-sided LMFP or NMC811) and anode sheets (double-sided Silicon-Carbon composite) are alternately stacked inside a continuous folding separator membrane. A standard 25 cm³ pouch utilizes 35 repeating layers, whereas a 37 cm³ extended-capacity pouch utilizes 55 repeating layers.
 2. **Ultrasonic Tab Consolidation:** Current collector tabs from all stacked layers are ultrasonically welded into unified positive aluminum and negative copper terminals in a single 1-second operation.
 3. **Pouch Encapsulation & Vacuum Infiltration:** The stack is inserted into a pre-formed aluminum laminated film (ALF) cup. The low-viscosity liquid precursor is injected under vacuum, achieving complete capillary wetting throughout all microscopic cathode pores within 10 minutes.
-4. **Hermetic Sealing & In-Situ Polymerization:** The pouch is vacuum-sealed and transferred to a standard convection chamber at 60°C for 2 hours. Thermal free-radical crosslinking converts the liquid precursor into a resilient, cohesive 3D gel-polymer electrolyte in-situ, requiring zero external mechanical clamping or high-pressure autoclaves.
+4. **Hermetic Sealing & In-Situ Polymerization:** The pouch is vacuum-sealed and transferred to a standard thermal conditioning chamber under controlled mild thermal activation. The in-situ crosslinking converts the liquid precursor into a resilient, cohesive 3D gel-polymer electrolyte in-situ, requiring zero external mechanical clamping or high-pressure autoclaves.
 
 ---
 
@@ -87,7 +87,7 @@ Pouch-cell scaling does not require altered chemical synthesis; it relies on par
 
 1. **High-Rate Charging without Thermal Degradation:** Commercial high-wattage fast charging (80W–120W) in liquid organic cells induces severe localized Joule heating, accelerating solvent evaporation and dendrite growth. M.E.T.S. achieves high lithium-ion mobility while the non-volatile gel network prevents solvent vaporization and thermal runaway.
 2. **Volumetric Packaging Efficiency:** Commercial designs frequently compromise energy capacity to maintain device profiles under 8.0 mm. Due to the 880–950 Wh/L volumetric energy density of M.E.T.S., a standard 5,000 mAh cell footprint can be reduced in thickness by **28% (down to ~3.7 mm)**, enabling slimmer hardware architectures without capacity compromise.
-3. **Intrinsic Chemical Safety vs. Software Protections:** Conventional hardware relies on software-driven temperature sensors and BMS cutoffs to prevent fires. If mechanical puncture or internal dendritic shorting occurs, software safeguards cannot halt chemical thermal runaway. M.E.T.S. provides **intrinsic, molecular-level fire suppression** by releasing vapor-phase phosphorus radical scavengers ($PO^\bullet, HPO^\bullet$) that terminate combustion chains instantly.
+3. **Intrinsic Chemical Safety vs. Software Protections:** Conventional hardware relies on software-driven temperature sensors and BMS cutoffs to prevent fires. If mechanical puncture or internal dendritic shorting occurs, software safeguards cannot halt chemical thermal runaway. M.E.T.S. provides **intrinsic, molecular-level fire suppression** by releasing vapor-phase radical scavengers that terminate combustion chains instantly.
 
 ---
 
@@ -152,12 +152,12 @@ This proves a **nearly 10-fold (960%) delay in dendrite initiation** under ident
 ---
 
 ### 3. Radical Scavenging Combustion Kinetics (Zero-Second SET)
-Thermal runaway in volatile organic electrolytes propagates via high-energy hydrogen ($\text{H}^\bullet$) and hydroxyl ($\text{OH}^\bullet$) radicals. Organophosphate plasticizers vaporize during thermal initiation to release phosphorus-containing radical scavengers:
+Thermal runaway in volatile organic electrolytes propagates via high-energy hydrogen ($\text{H}^\bullet$) and hydroxyl ($\text{OH}^\bullet$) radicals. Functional radical-scavenging components activate during thermal initiation to release gas-phase scavenger species ($R^\bullet$):
 
-$$\text{PO}^\bullet + \text{H}^\bullet \longrightarrow \text{HPO}$$
-$$\text{HPO} + \text{OH}^\bullet \longrightarrow \text{H}_2\text{O} + \text{PO}^\bullet$$
+$$R^\bullet + \text{H}^\bullet \longrightarrow \text{RH}$$
+$$R^\bullet + \text{OH}^\bullet \longrightarrow \text{H}_2\text{O} + R^\bullet$$
 
-By continuously regenerating $\text{PO}^\bullet$ radicals and converting combustible radicals into inert water vapor, the combustion chain reaction is chemically quenched in the vapor phase, achieving a Self-Extinguishing Time (SET) of 0 seconds.
+By continuously intercepting high-energy combustible radicals and converting chain carriers into inert byproducts, the combustion chain reaction is chemically quenched in the vapor phase, achieving a Self-Extinguishing Time (SET) of 0 seconds.
 
 ---
 
