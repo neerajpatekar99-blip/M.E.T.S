@@ -5,6 +5,7 @@
 [![MIT Solve 2027](https://img.shields.io/badge/MIT%20Solve-2027%20Climate%20Challenge-orange.svg)](https://solve.mit.edu)
 [![Energy Density](https://img.shields.io/badge/Energy%20Density-345--395%20Wh%2Fkg-blueviolet.svg)](#key-specifications)
 [![Volumetric Density](https://img.shields.io/badge/Volumetric%20Density-880--950%20Wh%2FL-blue.svg)](#key-specifications)
+[![Flagship Pouch](https://img.shields.io/badge/Flagship%20Capacity-10%2C600%20mAh-blue.svg)](#consumer-electronics-scaling-multi-layer-pouch-cell-architecture)
 [![Cycle Life](https://img.shields.io/badge/Cycle%20Life-2%2C000%2B%20Cycles-brightgreen.svg)](#key-specifications)
 [![Safety Profile](https://img.shields.io/badge/Safety-Non--Flammable%20(SET%20=%200s)-emerald.svg)](#core-innovations)
 [![Architecture](https://img.shields.io/badge/Architecture-In--Situ%20Quasi--Solid--State-purple.svg)](#how-it-works)
@@ -62,8 +63,8 @@ To evaluate the scalability of the M.E.T.S. architecture in compact consumer ele
 
 | Performance Metric | Standard Commercial Liquid Li-Ion | High-Capacity Liquid Si-C Cell | Project M.E.T.S. Architecture | Engineering Impact |
 | :--- | :--- | :--- | :--- | :--- |
-| **Standard Pouch (Volume ~25 cm³)** | 4,800 to 5,000 mAh | ~5,400 to 5,800 mAh | **6,100 to 6,350 mAh** | **+27% to +30% capacity** in standard 0.52 cm slim chassis |
-| **Extended Pouch (Volume ~37 cm³)** | ~7,000 to 7,500 mAh | 8,500 to 9,000 mAh | **10,400 to 10,800 mAh** | High-endurance mobile power exceeding 3 full days of runtime |
+| **Flagship Pouch (Volume ~37 cm³)** | ~7,000 to 7,500 mAh | 8,500 to 9,000 mAh | **10,600 mAh (10,400 to 10,800 mAh)** | High-endurance flagship power exceeding 3 full days of heavy compute runtime |
+| **Slim Pouch (Volume ~25 cm³)** | 4,800 to 5,000 mAh | ~5,400 to 5,800 mAh | **6,150 to 6,350 mAh** | Ultra-dense +30% capacity expansion in standard 0.52 cm slim chassis |
 | **Battery Health Retention** | 800 to 1,000 cycles (~2 to 3 yrs) | ~1,000 cycles | **2,000 to 2,500 cycles (5 to 7 yrs)** | 80%+ capacity retention across 5+ years of daily cycling |
 | **Thermal Stability (>45°C Ambient)** | Solvent volatilization, thermal throttling | Thermal throttling under fast charge | **Non-volatile gel matrix; zero throttling** | Full continuous charging rate under high ambient temperatures |
 | **Puncture & Impact Safety** | Rapid thermal runaway (>600°C fire) | Smoke and combustible rupture | **Self-Extinguishing Time (SET) = 0s** | Gas-phase radical trapping prevents open combustion upon puncture |
@@ -96,9 +97,10 @@ Pouch-cell scaling does not require altered chemical synthesis; it relies on par
 
 | Parameter | Specification | Engineering Benchmark / Rationale |
 | :--- | :--- | :--- |
-| **Form Factor Baseline** | CR2032 Coin Cell (Ø 20.0 x 3.2 mm) | Standardized IEC 60086-3 coin-cell baseline for rigorous laboratory cycling |
-| **CR2032 Prototype Nominal Capacity** | **5.1 to 6.1 mAh** | Nominal bench capacity using standard 14.0 mm active cathode discs |
-| **Scaled Commercial Stack Format** | Pouch / Prismatic (10 Ah to 100 Ah) | Scalable stacked multi-layer cells for commercial 2-wheeler and 3-wheeler packs |
+| **Flagship Multi-Layer Pouch Capacity** | **10,600 mAh** (~37 cm³ / 55 layers) | High-endurance flagship mobile battery architecture delivering 3+ days of runtime |
+| **Slim Profile Pouch Capacity** | **6,150 to 6,350 mAh** (~25 cm³ / 35 layers) | Ultra-slim consumer electronics profile (+30% capacity over commercial liquid) |
+| **CR2032 Prototype Baseline Capacity** | **2.5 to 3.8 mAh** (Single disc) | Standardized IEC 60086-3 coin-cell baseline for rigorous laboratory cycling |
+| **Scaled Commercial Pack Format** | Pouch / Prismatic (10 Ah to 100 Ah) | Scalable stacked multi-layer cells for commercial 2-wheeler and 3-wheeler packs |
 | **Cathode Areal Capacity Loading** | **3.30 to 3.96 mAh/cm²** | High mass loading enabled by complete capillary precursor infiltration |
 | **Cell Gravimetric Specific Energy** | **345 to 395 Wh/kg** | High specific energy eliminating weight penalties in electric transit |
 | **Cell Volumetric Energy Density** | **880 to 950 Wh/L** | Ultra-dense volumetric packaging maximizing limited vehicle battery bay volume |
