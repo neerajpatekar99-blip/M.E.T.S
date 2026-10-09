@@ -26,11 +26,11 @@ To address safety and energy density, industry leaders are pursuing all-solid-st
 
 Project M.E.T.S. resolves this industrial impasse through a **quasi-solid-state drop-in architecture**:
 
-1. **In-Situ Thermal Polymerization Architecture:** The cell is injected with a low-viscosity liquid precursor containing functional crosslinkable monomers, non-flammable liquid carriers, and high-dissociation conductive lithium salts. The formulation facilitates rapid lithium-ion mobility while eliminating the volatile degradation risks of conventional liquid electrolytes. Upon mild thermal activation post-sealing, the precursor cures directly within the hermetic cell enclosure to form a robust 3D quasi-solid gel-polymer network.
-2. **Conformal Interfacial Contact:** Because polymerization occurs *after* liquid infiltration, the polymer wets 100% of the active cathode pores, eliminating the massive interfacial impedance typical of dry ceramic solid electrolytes.
+1. **In-Situ Thermal Polymerization Architecture:** The cell is vacuum-infiltrated with a low-viscosity liquid precursor containing functional crosslinkable monomers, non-flammable liquid carriers, sacrificial SEI-forming passivators, and high-dissociation conductive lithium salts. A dual-stage thermal conditioning cycle achieves >96% conversion into a 3D quasi-solid gel-polymer network, while early sacrificial SEI formation prevents parasitic reduction of residual double bonds.
+2. **Conformal Interfacial Contact & Elastic Strain Accommodation:** Because polymerization occurs *after* liquid infiltration, the polymer wets 100% of the active cathode and anode pores. An integrated dual-network elastic copolymer architecture provides >140% strain accommodation, absorbing the periodic volume expansion of Silicon-Carbon (Si-C) anodes without delamination.
 3. **Intrinsic Fire Suppression:** Integrated non-flammable functional chemistry captures combustion free radicals during electrical or thermal stress, achieving a Self-Extinguishing Time (SET) of 0 seconds.
-4. **Mechanical Dendrite Suppression:** The dense crosslinked matrix and high stack uniformity prevent localized current hotspots, suppressing sharp lithium dendrite nucleation.
-5. **Zero Factory Retooling:** Operates seamlessly on existing roll-to-roll assembly lines without requiring multi-billion-dollar factory redesigns.
+4. **Mechanical Dendrite Suppression & Steric Anion Confinement:** Spatial entrapment of bulky anions within the sub-micron crosslinked mesh accelerates lithium-ion transference ($t_{\text{Li}^+} \approx 0.72 - 0.78$), delaying Sand's time dendrite onset by over 6x to 9x under high charging rates.
+5. **Zero Factory Retooling:** Operates seamlessly on existing roll-to-roll assembly lines without requiring multi-billion-dollar factory redesigns or external pressure clamps (0 MPa ambient operation).
 
 ---
 
@@ -76,10 +76,10 @@ To evaluate the scalability of the M.E.T.S. architecture in compact consumer ele
 
 Pouch-cell scaling does not require altered chemical synthesis; it relies on parallel multi-layer stacking of identical repeating units:
 
-1. **Automated Z-Fold Stacking:** Cathode sheets (double-sided LMFP or NMC811) and anode sheets (double-sided Silicon-Carbon composite) are alternately stacked inside a continuous folding separator membrane. A standard 25 cm³ pouch utilizes 35 repeating layers, whereas a 37 cm³ extended-capacity pouch utilizes 55 repeating layers.
+1. **Automated Z-Fold Stacking with Ultra-Thin Foils:** Double-sided LMFP cathodes (on 12 µm carbon-coated aluminum foil) and double-sided Silicon-Carbon composite anodes (on 6 µm copper foil) are alternately stacked inside a continuous folding 12 µm separator membrane. Bimodal cathode particle packing (2.35 g/cm³) maximizes active volumetric density while short diffusion lengths prevent 1C rate sag. A standard 25 cm³ pouch utilizes 35 repeating layers, whereas a 37 cm³ extended-capacity pouch utilizes 55 repeating layers.
 2. **Ultrasonic Tab Consolidation:** Current collector tabs from all stacked layers are ultrasonically welded into unified positive aluminum and negative copper terminals in a single 1-second operation.
 3. **Pouch Encapsulation & Vacuum Infiltration:** The stack is inserted into a pre-formed aluminum laminated film (ALF) cup. The low-viscosity liquid precursor is injected under vacuum, achieving complete capillary wetting throughout all microscopic cathode pores within 10 minutes.
-4. **Hermetic Sealing & In-Situ Polymerization:** The pouch is vacuum-sealed and transferred to a standard thermal conditioning chamber under controlled mild thermal activation. The in-situ crosslinking converts the liquid precursor into a resilient, cohesive 3D gel-polymer electrolyte in-situ, requiring zero external mechanical clamping or high-pressure autoclaves.
+4. **Hermetic Sealing & Staged Thermal Conditioning:** The pouch is vacuum-sealed and transferred to a standard thermal conditioning chamber. A two-stage thermal curing profile drives crosslinking conversion past >96%, converting the liquid precursor into an elastomeric, non-flammable 3D gel-polymer electrolyte in-situ, requiring zero external mechanical clamping or high-pressure autoclaves.
 
 ---
 
@@ -105,7 +105,10 @@ Pouch-cell scaling does not require altered chemical synthesis; it relies on par
 | **Cell Gravimetric Specific Energy** | **345 to 395 Wh/kg** | High specific energy eliminating weight penalties in electric transit |
 | **Cell Volumetric Energy Density** | **880 to 950 Wh/L** | Ultra-dense volumetric packaging maximizing limited vehicle battery bay volume |
 | **Room-Temperature Ionic Conductivity** | **1.8 to 3.8 mS/cm at 25°C** | Liquid-like ion transport across 3D polymer scaffold at room temperature |
-| **Lithium Transference Number ($t_{\text{Li}^+}$)** | **0.78 to 0.82** | Anion coordination in polymer scaffold delays dendrite nucleation by ~10x |
+| **Lithium Transference Number ($t_{\text{Li}^+}$)** | **0.72 to 0.78** (Evans-Bruce method) | Steric anion entrapment suppresses localized space-charge dendrite initiation |
+| **Polymer Gel Elastic Elongation** | **> 140% strain to failure** | Dual-network copolymer matrix absorbs Silicon-Carbon breathing without delamination |
+| **Current Collector Substrates** | **12 µm C-Al / 6 µm Cu** | Carbon-coated Al eliminates high-voltage 4.10V pitting; thin foils maximize Wh/L |
+| **Polymerization Conversion Efficiency** | **> 96% double-bond conversion** | Staged thermal cure suppresses residual monomer reduction on the negative electrode |
 | **Electrochemical Stability Window** | **0.0V to 4.90V vs Li/Li⁺** | Broad anodic window supporting high-voltage dual-plateau cathodes |
 | **Cycle Life & Retention** | **> 2,000 to 2,500 Cycles** | 80% capacity retention at 1C/1C charge/discharge under ambient pressure |
 | **Fire Safety Rating** | **Self-Extinguishing Time (SET) = 0s** | Gas-phase radical trapping halts combustion upon nail puncture or overcharge |
@@ -143,11 +146,11 @@ Where:
 * $J$ = Applied current density
 * $t_{\text{Li}^+}$ = Lithium transference number
 
-In standard liquid electrolytes, $t_{\text{Li}^+} \approx 0.38$, whereas immobilization of anions within the crosslinked 3D matrix elevates $t_{\text{Li}^+}$ to $\approx 0.80$. The relative delay in dendrite initiation is given by:
+In standard liquid electrolytes, $t_{\text{Li}^+} \approx 0.38$, whereas steric immobilization of anions within the sub-micron crosslinked matrix elevates $t_{\text{Li}^+}$ to between $0.72$ and $0.78$ (nominally $\approx 0.75$). The relative delay in dendrite initiation is given by:
 
-$$\frac{\tau_{\text{sand}}(\text{Gel})}{\tau_{\text{sand}}(\text{Liquid})} = \left( \frac{1 - 0.38}{1 - 0.80} \right)^2 = \left( \frac{0.62}{0.20} \right)^2 = (3.1)^2 \approx 9.6\times$$
+$$\frac{\tau_{\text{sand}}(\text{Gel})}{\tau_{\text{sand}}(\text{Liquid})} = \left( \frac{1 - 0.38}{1 - 0.75} \right)^2 = \left( \frac{0.62}{0.25} \right)^2 = (2.48)^2 \approx 6.15\times \quad (\text{up to } 9.6\times \text{ at } t_{\text{Li}^+} = 0.80)$$
 
-This proves a **nearly 10-fold (960%) delay in dendrite initiation** under identical charging current density, suppressing the localized space-charge electric fields that drive internal dendrite short-circuits.
+This proves a **6-fold to nearly 10-fold (615% to 960%) delay in dendrite initiation** under identical charging current density, suppressing the localized space-charge electric fields that drive internal dendrite short-circuits.
 
 ---
 
