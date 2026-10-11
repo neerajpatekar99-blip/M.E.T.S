@@ -4,7 +4,7 @@
 
 [![MIT Solve 2027](https://img.shields.io/badge/MIT%20Solve-2027%20Climate%20Challenge-orange.svg)](https://solve.mit.edu)
 [![Energy Density](https://img.shields.io/badge/Energy%20Density-345--395%20Wh%2Fkg-blueviolet.svg)](#key-specifications)
-[![Volumetric Density](https://img.shields.io/badge/Volumetric%20Density-880--950%20Wh%2FL-blue.svg)](#key-specifications)
+[![Volumetric Density](https://img.shields.io/badge/Volumetric%20Density-650--720%20Wh%2FL-blue.svg)](#key-specifications)
 [![Flagship Pouch](https://img.shields.io/badge/Flagship%20Capacity-10%2C600%20mAh-blue.svg)](#consumer-electronics-scaling-multi-layer-pouch-cell-architecture)
 [![Cycle Life](https://img.shields.io/badge/Cycle%20Life-2%2C000%2B%20Cycles-brightgreen.svg)](#key-specifications)
 [![Safety Profile](https://img.shields.io/badge/Safety-Non--Flammable%20(SET%20=%200s)-emerald.svg)](#core-innovations)
@@ -42,13 +42,15 @@ To bridge advanced electrochemical science with community impact, M.E.T.S. trans
 | :--- | :--- | :--- | :--- | :--- |
 | **Fire Safety under Puncture** | Catastrophic fire / explosion | Non-flammable | **0-Second Self-Extinguishing (SET = 0s)** | Prevents deadly urban EV fires in crowded transit corridors |
 | **Gravimetric Energy Density (Wh/kg)** | 160 – 250 Wh/kg | ~300 Wh/kg (lab only) | **345 – 395 Wh/kg** | **Up to 40% lighter pack** (longer driving range per charge) |
-| **Volumetric Energy Density (Wh/L)** | 450 – 650 Wh/L | ~700 Wh/L | **880 – 950 Wh/L** | **Takes 35% less space** under two-wheeler seats or auto chassis |
+| **Volumetric Energy Density (Wh/L)** | 450 – 650 Wh/L | ~700 Wh/L | **650 – 720 Wh/L (LNMO) / 580 – 640 Wh/L (LMFP)**¹ | **Takes 15%–20% less space** with non-flammable solid-state safety |
 | **Areal Cathode Capacity (mAh/cm²)** | 1.8 – 2.5 mAh/cm² | < 2.0 mAh/cm² (brittle contact) | **3.30 – 3.96 mAh/cm²** | Higher energy storage in a compact physical footprint |
 | **Battery Lifespan in Heat (>45°C)** | 2 Years (~800 cycles) | Untested outside lab | **5+ Years (2,000+ stable cycles)** | Prevents premature summer heat capacity degradation |
 | **Driver Battery Replacement Cost** | 40%–50% of vehicle cost every 2 yrs | Prohibitively expensive | **Halved over 5-year operating window** | Direct net income increase for delivery riders & auto drivers |
 | **Factory Retooling Capex** | Existing baseline | $500M – $1.8B per gigafactory | **$0 (100% Drop-in compatible)** | Immediate global scalability without scrapping existing equipment |
 | **Operating Pressure Requirement** | Ambient (0 MPa) | 5 – 50 MPa continuous clamp | **Ambient (0 MPa external pressure)** | Lightweight, standard pack casing without heavy steel clamps |
 | **Toxic Electronic Waste** | Rapid disposal after 24 months | Unclear recyclability | **>60% reduction in premature cell disposal** | Stops tons of toxic heavy metals from contaminating local soils |
+
+¹ *Note on Volumetric Density Limits:* Cell-level volumetric densities of 650–720 Wh/L (high-voltage LNMO / Si-C spinel) and 580–640 Wh/L (LMFP / Si-C olivine) represent realistic, physics-grounded engineering ceilings accounting for active material tap densities, electrode porosities, and pouch packaging factors. Values exceeding >850 Wh/L are mathematically restricted to ultra-thin (<25 µm) metallic lithium foil architectures, which carry severe cycle life trade-offs at ambient pressure.
 
 ### What This Means for Everyday People:
 * **For Delivery Riders & Auto-Rickshaw Drivers:** Battery replacement is the single largest operating expense after purchase (eating nearly half the vehicle value). Doubling the battery pack lifetime from 2 years to 5+ years cuts replacement depreciation in half, directly increasing take-home income for low-income gig workers.
@@ -86,7 +88,7 @@ Pouch-cell scaling does not require altered chemical synthesis; it relies on par
 ### 🔬 Industrial Performance Benchmarks vs. M.E.T.S. Architectural Advantages
 
 1. **High-Rate Charging without Thermal Degradation:** Commercial high-wattage fast charging (80W–120W) in liquid organic cells induces severe localized Joule heating, accelerating solvent evaporation and dendrite growth. M.E.T.S. achieves high lithium-ion mobility while the non-volatile gel network prevents solvent vaporization and thermal runaway.
-2. **Volumetric Packaging Efficiency:** Commercial designs frequently compromise energy capacity to maintain device profiles under 8.0 mm. Due to the 880–950 Wh/L volumetric energy density of M.E.T.S., a standard 5,000 mAh cell footprint can be reduced in thickness by **28% (down to ~3.7 mm)**, enabling slimmer hardware architectures without capacity compromise.
+2. **Volumetric Packaging Efficiency:** Commercial designs frequently compromise energy capacity to maintain device profiles under 8.0 mm. Achieving 650–720 Wh/L (LNMO / Si-C) and 580–640 Wh/L (LMFP / Si-C) in a drop-in gel-polymer matrix allows compact hardware packaging without the safety hazards of liquid carbonates or the heavy mechanical clamping hardware required by brittle ceramic solid-states.
 3. **Intrinsic Chemical Safety vs. Software Protections:** Conventional hardware relies on software-driven temperature sensors and BMS cutoffs to prevent fires. If mechanical puncture or internal dendritic shorting occurs, software safeguards cannot halt chemical thermal runaway. M.E.T.S. provides **intrinsic, molecular-level fire suppression** by releasing vapor-phase radical scavengers that terminate combustion chains instantly.
 
 ---
@@ -103,7 +105,7 @@ Pouch-cell scaling does not require altered chemical synthesis; it relies on par
 | **Scaled Commercial Pack Format** | Pouch / Prismatic (10 Ah to 100 Ah) | Scalable stacked multi-layer cells for commercial 2-wheeler and 3-wheeler packs |
 | **Cathode Areal Capacity Loading** | **3.30 to 3.96 mAh/cm²** | High mass loading enabled by complete capillary precursor infiltration |
 | **Cell Gravimetric Specific Energy** | **345 to 395 Wh/kg** | High specific energy eliminating weight penalties in electric transit |
-| **Cell Volumetric Energy Density** | **880 to 950 Wh/L** | Ultra-dense volumetric packaging maximizing limited vehicle battery bay volume |
+| **Cell Volumetric Energy Density** | **650 to 720 Wh/L** (LNMO / Si-C)<br>**580 to 640 Wh/L** (LMFP / Si-C) | High volumetric energy density in non-flammable gel matrix (>850 Wh/L physically bounded to pure Li-metal) |
 | **Room-Temperature Ionic Conductivity** | **1.8 to 3.8 mS/cm at 25°C** | Liquid-like ion transport across 3D polymer scaffold at room temperature |
 | **Lithium Transference Number ($t_{\text{Li}^+}$)** | **0.72 to 0.78** (Evans-Bruce method) | Steric anion entrapment suppresses localized space-charge dendrite initiation |
 | **Polymer Gel Elastic Elongation** | **> 140% strain to failure** | Dual-network copolymer matrix absorbs Silicon-Carbon breathing without delamination |
