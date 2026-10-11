@@ -3,9 +3,9 @@
 ## Multi-Electron Transport Solid-State Battery Architecture
 
 [![MIT Solve 2027](https://img.shields.io/badge/MIT%20Solve-2027%20Climate%20Challenge-orange.svg)](https://solve.mit.edu)
-[![Energy Density](https://img.shields.io/badge/Energy%20Density-345--395%20Wh%2Fkg-blueviolet.svg)](#key-specifications)
+[![Energy Density](https://img.shields.io/badge/Energy%20Density-280--320%20Wh%2Fkg-blueviolet.svg)](#key-specifications)
 [![Volumetric Density](https://img.shields.io/badge/Volumetric%20Density-650--720%20Wh%2FL-blue.svg)](#key-specifications)
-[![Flagship Pouch](https://img.shields.io/badge/Flagship%20Capacity-10%2C600%20mAh-blue.svg)](#consumer-electronics-scaling-multi-layer-pouch-cell-architecture)
+[![Flagship Pouch](https://img.shields.io/badge/Flagship%20Capacity-5%2C650--5%2C950%20mAh-blue.svg)](#consumer-electronics-scaling-multi-layer-pouch-cell-architecture)
 [![Cycle Life](https://img.shields.io/badge/Cycle%20Life-2%2C000%2B%20Cycles-brightgreen.svg)](#key-specifications)
 [![Safety Profile](https://img.shields.io/badge/Safety-Non--Flammable%20(SET%20=%200s)-emerald.svg)](#core-innovations)
 [![Architecture](https://img.shields.io/badge/Architecture-In--Situ%20Quasi--Solid--State-purple.svg)](#how-it-works)
@@ -41,7 +41,7 @@ To bridge advanced electrochemical science with community impact, M.E.T.S. trans
 | Key Metric | Standard Commercial Li-Ion | All-Solid-State (Ceramic) | Project M.E.T.S. Architecture | Real-World Impact & Benefit |
 | :--- | :--- | :--- | :--- | :--- |
 | **Fire Safety under Puncture** | Catastrophic fire / explosion | Non-flammable | **0-Second Self-Extinguishing (SET = 0s)** | Prevents deadly urban EV fires in crowded transit corridors |
-| **Gravimetric Energy Density (Wh/kg)** | 160 – 250 Wh/kg | ~300 Wh/kg (lab only) | **345 – 395 Wh/kg** | **Up to 40% lighter pack** (longer driving range per charge) |
+| **Gravimetric Energy Density (Wh/kg)** | 160 – 250 Wh/kg | ~300 Wh/kg (lab only) | **280 – 320 Wh/kg (LNMO) / 220 – 250 Wh/kg (LMFP)** | **Up to 25% lighter pack** with non-flammable solid-state safety |
 | **Volumetric Energy Density (Wh/L)** | 450 – 650 Wh/L | ~700 Wh/L | **650 – 720 Wh/L (LNMO) / 580 – 640 Wh/L (LMFP)**¹ | **Takes 15%–20% less space** with non-flammable solid-state safety |
 | **Areal Cathode Capacity (mAh/cm²)** | 1.8 – 2.5 mAh/cm² | < 2.0 mAh/cm² (brittle contact) | **3.30 – 3.96 mAh/cm²** | Higher energy storage in a compact physical footprint |
 | **Battery Lifespan in Heat (>45°C)** | 2 Years (~800 cycles) | Untested outside lab | **5+ Years (2,000+ stable cycles)** | Prevents premature summer heat capacity degradation |
@@ -65,8 +65,8 @@ To evaluate the scalability of the M.E.T.S. architecture in compact consumer ele
 
 | Performance Metric | Standard Commercial Liquid Li-Ion | High-Capacity Liquid Si-C Cell | Project M.E.T.S. Architecture | Engineering Impact |
 | :--- | :--- | :--- | :--- | :--- |
-| **Flagship Pouch (Volume ~37 cm³)** | ~7,000 to 7,500 mAh | 8,500 to 9,000 mAh | **10,600 mAh (10,400 to 10,800 mAh)** | High-endurance flagship power exceeding 3 full days of heavy compute runtime |
-| **Slim Pouch (Volume ~25 cm³)** | 4,800 to 5,000 mAh | ~5,400 to 5,800 mAh | **6,150 to 6,350 mAh** | Ultra-dense +30% capacity expansion in standard 0.52 cm slim chassis |
+| **Flagship Pouch (Volume ~37 cm³)** | ~6,200 to 6,500 mAh (~24 Wh) | ~6,800 to 7,200 mAh (~27 Wh) | **5,650 to 5,950 mAh (25.1 to 26.5 Wh)** | 4.45V nominal plateau delivering flagship runtime with non-flammable gel |
+| **Slim Pouch (Volume ~25 cm³)** | 4,000 to 4,200 mAh (~16 Wh) | ~4,600 to 4,800 mAh (~18 Wh) | **3,800 to 4,000 mAh (17.0 to 17.8 Wh)** | Ultra-slim profile with intrinsic fire suppression and zero pouch swelling |
 | **Battery Health Retention** | 800 to 1,000 cycles (~2 to 3 yrs) | ~1,000 cycles | **2,000 to 2,500 cycles (5 to 7 yrs)** | 80%+ capacity retention across 5+ years of daily cycling |
 | **Thermal Stability (>45°C Ambient)** | Solvent volatilization, thermal throttling | Thermal throttling under fast charge | **Non-volatile gel matrix; zero throttling** | Full continuous charging rate under high ambient temperatures |
 | **Puncture & Impact Safety** | Rapid thermal runaway (>600°C fire) | Smoke and combustible rupture | **Self-Extinguishing Time (SET) = 0s** | Gas-phase radical trapping prevents open combustion upon puncture |
@@ -78,7 +78,7 @@ To evaluate the scalability of the M.E.T.S. architecture in compact consumer ele
 
 Pouch-cell scaling does not require altered chemical synthesis; it relies on parallel multi-layer stacking of identical repeating units:
 
-1. **Automated Z-Fold Stacking with Ultra-Thin Foils:** Double-sided LMFP cathodes (on 12 µm carbon-coated aluminum foil) and double-sided Silicon-Carbon composite anodes (on 6 µm copper foil) are alternately stacked inside a continuous folding 12 µm separator membrane. Bimodal cathode particle packing (2.35 g/cm³) maximizes active volumetric density while short diffusion lengths prevent 1C rate sag. A standard 25 cm³ pouch utilizes 35 repeating layers, whereas a 37 cm³ extended-capacity pouch utilizes 55 repeating layers.
+1. **Automated Z-Fold Stacking with Ultra-Thin Foils:** Double-sided high-voltage LNMO spinel cathodes (or baseline LMFP olivine) on 12 µm carbon-coated aluminum foil (C-Al with LiBOB buffer) and double-sided Silicon-Carbon composite anodes (on 6 µm copper foil) are alternately stacked inside a continuous folding 12 µm separator membrane. Controlled bimodal particle packing maximizes active volumetric density while short diffusion lengths prevent 1C rate sag. A standard 25 cm³ pouch utilizes 35 repeating layers, whereas a 37 cm³ extended-capacity pouch utilizes 55 repeating layers.
 2. **Ultrasonic Tab Consolidation:** Current collector tabs from all stacked layers are ultrasonically welded into unified positive aluminum and negative copper terminals in a single 1-second operation.
 3. **Pouch Encapsulation & Vacuum Infiltration:** The stack is inserted into a pre-formed aluminum laminated film (ALF) cup. The low-viscosity liquid precursor is injected under vacuum, achieving complete capillary wetting throughout all microscopic cathode pores within 10 minutes.
 4. **Hermetic Sealing & Staged Thermal Conditioning:** The pouch is vacuum-sealed and transferred to a standard thermal conditioning chamber. A two-stage thermal curing profile drives crosslinking conversion past >96%, converting the liquid precursor into an elastomeric, non-flammable 3D gel-polymer electrolyte in-situ, requiring zero external mechanical clamping or high-pressure autoclaves.
@@ -99,12 +99,12 @@ Pouch-cell scaling does not require altered chemical synthesis; it relies on par
 
 | Parameter | Specification | Engineering Benchmark / Rationale |
 | :--- | :--- | :--- |
-| **Flagship Multi-Layer Pouch Capacity** | **10,600 mAh** (~37 cm³ / 55 layers) | High-endurance flagship mobile battery architecture delivering 3+ days of runtime |
-| **Slim Profile Pouch Capacity** | **6,150 to 6,350 mAh** (~25 cm³ / 35 layers) | Ultra-slim consumer electronics profile (+30% capacity over commercial liquid) |
+| **Flagship Multi-Layer Pouch Capacity** | **5,650 to 5,950 mAh** (~37 cm³ / 55 layers, 4.45V) | High-endurance flagship mobile battery architecture delivering 25.1 to 26.5 Wh of total energy |
+| **Slim Profile Pouch Capacity** | **3,800 to 4,000 mAh** (~25 cm³ / 35 layers, 4.45V) | Ultra-slim consumer profile delivering 17.0 to 17.8 Wh with non-flammable solid-state safety |
 | **CR2032 Prototype Baseline Capacity** | **2.5 to 3.8 mAh** (Single disc) | Standardized IEC 60086-3 coin-cell baseline for rigorous laboratory cycling |
 | **Scaled Commercial Pack Format** | Pouch / Prismatic (10 Ah to 100 Ah) | Scalable stacked multi-layer cells for commercial 2-wheeler and 3-wheeler packs |
 | **Cathode Areal Capacity Loading** | **3.30 to 3.96 mAh/cm²** | High mass loading enabled by complete capillary precursor infiltration |
-| **Cell Gravimetric Specific Energy** | **345 to 395 Wh/kg** | High specific energy eliminating weight penalties in electric transit |
+| **Cell Gravimetric Specific Energy** | **280 to 320 Wh/kg** (LNMO / Si-C)<br>**220 to 250 Wh/kg** (LMFP / Si-C) | High specific energy with cobalt-free chemistries and ambient-pressure operation |
 | **Cell Volumetric Energy Density** | **650 to 720 Wh/L** (LNMO / Si-C)<br>**580 to 640 Wh/L** (LMFP / Si-C) | High volumetric energy density in non-flammable gel matrix (>850 Wh/L physically bounded to pure Li-metal) |
 | **Room-Temperature Ionic Conductivity** | **1.8 to 3.8 mS/cm at 25°C** | Liquid-like ion transport across 3D polymer scaffold at room temperature |
 | **Lithium Transference Number ($t_{\text{Li}^+}$)** | **0.72 to 0.78** (Evans-Bruce method) | Steric anion entrapment suppresses localized space-charge dendrite initiation |
@@ -185,10 +185,10 @@ To maintain strict scientific reproducibility and preserve control baselines, Pr
   * Planar SS316L pressure distribution for uniform interfacial contact across the soft lithium metal anode.
   * Primary objective: Eliminate volatile flammability (SET = 0s) while demonstrating drop-in roll-to-roll manufacturing compatibility.
 
-* **Track B — Advanced Experimental Betterments:**
-  * High-voltage dual-plateau olivine chemistry (LMFP, delivering up to 4.1V cutoff) to maximize specific energy density.
-  * Interfacial buffer layers and surface pre-passivation on the lithium metal anode to prevent transient voltage sag during high C-rate power pulses.
-  * Multi-salt electrolyte formulations optimized for wide electrochemical voltage stability windows.
+* **Track B — Advanced High-Voltage Architectures:**
+  * High-voltage spinel chemistry (LNMO, LiNi₀.₅Mn₁.₅O₄, delivering a 4.7V plateau, 4.45V nominal vs Si-C) paired with Silicon-Carbon composite anodes.
+  * LiBOB interfacial passivating co-salt to suppress aluminum collector dissolution above 4.2V and passivate high-voltage cathode interfaces.
+  * Baseline comparison with high-voltage dual-plateau olivine chemistry (LMFP, 4.1V cutoff).
 
 > **Research Integrity Notice:** To protect intellectual property and preserve baseline reproducibility, experimental variant formulations, exact precursor molarities, and laboratory synthesis SOPs are maintained in isolated private research branches.
 
